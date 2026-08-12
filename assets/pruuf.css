@@ -1,0 +1,793 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Pruuf — the website design system
+   ═══════════════════════════════════════════════════════════════════════════
+
+   One stylesheet, shared by every page. See ../../WEBSITE.md for the reasoning;
+   the short version:
+
+   · The palette IS the app's palette. Someone who taps the button and then
+     visits the site should not be able to tell they left.
+   · Two system faces, no webfont. New York (ui-serif) carries the emotional
+     headlines; SF Pro Rounded (ui-rounded) — the app's own face — carries
+     everything else. Nothing is downloaded, so nothing blocks the first paint
+     and nothing needs disclosing in a privacy policy.
+   · Space is the luxury signal. Section padding is deliberately about double
+     what looks "right" on first draft.
+   · Motion settles rather than springs, and disappears entirely under
+     prefers-reduced-motion.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Palette, from Shared/Theme.swift ─────────────────────────────── */
+  --canvas:   #FBFAF7;   /* warm off-white; pure white is harsh under a lamp */
+  --surface:  #FFFFFF;
+  --ink:      #16150F;   /* warm near-black; #000 vibrates against white     */
+  --ink-soft: #3A3833;
+  --muted:    #6E6A62;
+  --faint:    #8B8780;
+  --hairline: #E7E4DC;
+  --hairline-strong: #D8D4C9;
+
+  --ok:       #0E8A4F;   /* reassurance                                     */
+  --ok-soft:  #E4F4EA;
+  --ok-deep:  #0B7A45;
+  --alarm:    #C1121F;   /* ONLY missed check-ins and help. Nothing else.   */
+  --alarm-soft: #FCE9EA;
+  --accent:   #1D4ED8;
+  --accent-soft: #E8EDFB;
+
+  /* ── The two additions the app has no need for ────────────────────── */
+  --night:      #0F0E0B;  /* full-bleed dark bands                          */
+  --night-soft: #1B1913;
+  --night-line: #2A2720;
+  --on-night:   #F5F2EA;
+  --on-night-muted: #A8A296;
+  /* Champagne/brass. Hairlines and 12px eyebrows on dark ONLY. Any larger
+     and it stops reading as expensive and starts reading as a casino.      */
+  --brass: #B08D57;
+
+  /* ── Type ─────────────────────────────────────────────────────────── */
+  --serif:  ui-serif, "New York", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --round:  ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont,
+            "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --mono:   ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Fluid scale. clamp() means there is no breakpoint where type jumps.    */
+  /* Capped at 5rem rather than 5.75rem. The hero headline carries its own
+     line breaks — "One tap. / And everyone / stops worrying." — and at 92px
+     the second of those was wider than the column and wrapped, leaving "And"
+     stranded on a line by itself. A headline that breaks where the designer
+     did not choose is worse than a slightly smaller one. */
+  --fs-display: clamp(2.75rem, 1.6rem + 4.4vw, 5rem);
+  --fs-h1:      clamp(2.25rem, 1.5rem + 3.2vw, 4rem);
+  --fs-h2:      clamp(1.875rem, 1.35rem + 2.2vw, 3rem);
+  --fs-h3:      clamp(1.3rem, 1.15rem + 0.6vw, 1.6rem);
+  --fs-lead:    clamp(1.15rem, 1.05rem + 0.5vw, 1.45rem);
+  --fs-body:    1.125rem;      /* 18px floor. The reader may be 78.          */
+  --fs-small:   0.9375rem;
+
+  /* ── Space ────────────────────────────────────────────────────────── */
+  --gap:      clamp(1.25rem, 0.9rem + 1.4vw, 2rem);
+  --section:  clamp(5.5rem, 3rem + 9vw, 11rem);
+  --page:     clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  --measure:  36rem;           /* comfortable reading width                  */
+  --wide:     72rem;
+
+  /* ── Surface ──────────────────────────────────────────────────────── */
+  --r-xl: 28px; --r-lg: 20px; --r-md: 14px; --r-sm: 9px;
+  --shadow:      0 1px 2px rgba(22,21,15,.05), 0 10px 30px -14px rgba(22,21,15,.20);
+  --shadow-lift: 0 2px 6px rgba(22,21,15,.06), 0 26px 56px -22px rgba(22,21,15,.30);
+  --shadow-deep: 0 40px 90px -40px rgba(22,21,15,.45);
+
+  --ease: cubic-bezier(.16, 1, .3, 1);   /* settles, never springs           */
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 400 var(--fs-body)/1.65 var(--round);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, picture, svg, video { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Focus. Visible, always — the audience includes keyboard and switch users,
+   and "outline: none" is the single most common accessibility failure on
+   sites that describe themselves as premium. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--ink); color: #fff; padding: 14px 20px;
+  border-radius: 0 0 var(--r-md) 0; font-weight: 700; text-decoration: none;
+}
+.skip:focus { left: 0; }
+
+/* ── Type ──────────────────────────────────────────────────────────── */
+h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+
+/* The serif is for feeling, never for interface. Nothing below 24px uses it. */
+.display, .h1, .h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.025em; }
+.display { font-size: var(--fs-display); line-height: 1.02; }
+.h1      { font-size: var(--fs-h1);      line-height: 1.05; }
+.h2      { font-size: var(--fs-h2);      line-height: 1.08; }
+.h3      { font-size: var(--fs-h3);      font-family: var(--round); font-weight: 700; }
+
+.lead { font-size: var(--fs-lead); line-height: 1.55; color: var(--ink-soft); }
+p { margin: 0 0 1.15em; }
+p:last-child { margin-bottom: 0; }
+.muted { color: var(--muted); }
+.small { font-size: var(--fs-small); }
+
+/* The eyebrow: small caps above a headline. Does most of the work of making a
+   section feel deliberately composed rather than merely stacked. */
+.eyebrow {
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--muted); margin: 0 0 1.1rem;
+  display: flex; align-items: center; gap: 0.7rem;
+}
+.eyebrow::before {
+  content: ""; width: 26px; height: 1px; background: var(--hairline-strong);
+  flex: 0 0 auto;
+}
+
+a { color: var(--ok-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--ink); }
+
+/* ── Layout ────────────────────────────────────────────────────────── */
+.wrap  { width: min(100% - var(--page) * 2, var(--wide)); margin-inline: auto; }
+.prose { max-width: var(--measure); }
+.section { padding-block: var(--section); }
+.section--tight { padding-block: clamp(3.5rem, 2rem + 6vw, 7rem); }
+.center { text-align: center; margin-inline: auto; }
+
+/* The dark band. Alternating warm-white and near-black is what gives the page
+   its rhythm and what makes the device renders glow instead of sit flat. */
+.night {
+  background: var(--night); color: var(--on-night);
+  position: relative; isolation: isolate;
+}
+.night .lead, .night p { color: var(--on-night-muted); }
+.night .eyebrow { color: var(--brass); }
+.night .eyebrow::before { background: var(--brass); }
+/* `:not(.btn)` matters more than it looks. `.night a` and `.btn` are both one
+   class deep, but the descendant selector gives `.night a` the higher
+   specificity — so inside a dark section it overrode every button's own colour.
+   The visible symptom was the cream "Open it full screen" button rendering
+   cream-on-cream: a completely invisible call to action on the page whose
+   whole job is to get somebody into the demo. */
+.night a:not(.btn) { color: var(--on-night); }
+.night h1, .night h2, .night h3 { color: var(--on-night); }
+/* One very soft warm bloom so the black is not a flat rectangle. Below the
+   contrast threshold — you should not be able to name it. */
+.night::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60% 70% at 15% 0%,   rgba(176,141,87,.13), transparent 70%),
+    radial-gradient(50% 60% at 90% 100%, rgba(14,138,79,.10),  transparent 70%);
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────── */
+.btn {
+  --btn-bg: var(--ink); --btn-fg: #fff; --btn-line: transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
+  padding: 1rem 1.6rem; min-height: 54px;
+  background: var(--btn-bg); color: var(--btn-fg);
+  border: 1.5px solid var(--btn-line); border-radius: 999px;
+  font-weight: 700; font-size: 1.0625rem; letter-spacing: -0.01em;
+  text-decoration: none; cursor: pointer;
+  transition: transform .28s var(--ease), box-shadow .28s var(--ease),
+              background .2s ease, color .2s ease, border-color .2s ease;
+  box-shadow: 0 1px 2px rgba(22,21,15,.10);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); color: var(--btn-fg); }
+.btn:active { transform: translateY(0); transition-duration: .06s; }
+
+/* `--ok-deep`, not `--ok`. White on #0E8A4F measures 4.41:1, which is under
+   the 4.5:1 floor for 17px text — on the single most important button on the
+   site, read by an audience that skews old. #0B7A45 is the same brand green a
+   shade down and measures 5.4:1. */
+.btn--ok      { --btn-bg: var(--ok-deep); --btn-fg: #fff; }
+.btn--ok:hover{ --btn-bg: #096237; }
+.btn--ghost   { --btn-bg: transparent; --btn-fg: var(--ink); --btn-line: var(--hairline-strong); }
+.btn--ghost:hover { --btn-bg: var(--surface); --btn-line: var(--ink); }
+.night .btn--ghost { --btn-fg: var(--on-night); --btn-line: var(--night-line); }
+.night .btn--ghost:hover { --btn-bg: var(--night-soft); --btn-line: var(--brass); }
+.night .btn--light { --btn-bg: var(--on-night); --btn-fg: var(--night); }
+.btn--sm { padding: .7rem 1.15rem; min-height: 44px; font-size: .95rem; }
+.btn[disabled] { opacity: .5; pointer-events: none; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: .85rem; align-items: center; }
+.btn-row--center { justify-content: center; }
+
+/* A link that behaves like a sentence but reads as an action. */
+.arrow {
+  font-weight: 700; text-decoration: none; display: inline-flex;
+  align-items: center; gap: .4rem;
+}
+.arrow::after { content: "→"; transition: transform .3s var(--ease); }
+.arrow:hover::after { transform: translateX(4px); }
+
+/* ── Cards ─────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--r-lg); padding: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  box-shadow: var(--shadow);
+}
+.night .card {
+  background: var(--night-soft); border-color: var(--night-line);
+  box-shadow: none; color: var(--on-night);
+}
+.card--flat { box-shadow: none; }
+.card--link { display: block; text-decoration: none; color: inherit;
+              transition: transform .3s var(--ease), box-shadow .3s var(--ease),
+                          border-color .3s ease; }
+.card--link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift);
+                    border-color: var(--hairline-strong); color: inherit; }
+
+.grid { display: grid; gap: var(--gap); }
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.grid--4 { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+
+/* A two-column "text beside a picture" block that stacks on narrow screens
+   and can be flipped without touching the DOM order. */
+.split {
+  display: grid; gap: clamp(2rem, 1rem + 5vw, 5rem);
+  grid-template-columns: 1fr; align-items: center;
+}
+@media (min-width: 62rem) {
+  .split { grid-template-columns: 1fr 1fr; }
+  .split--wide-left  { grid-template-columns: 1.15fr .85fr; }
+  .split--wide-right { grid-template-columns: .85fr 1.15fr; }
+  .split--flip > :first-child { order: 2; }
+}
+
+/* ── Chips, pills, status ──────────────────────────────────────────── */
+.chip {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .38rem .8rem; border-radius: 999px;
+  font-size: .8125rem; font-weight: 700; letter-spacing: .01em;
+  background: var(--ok-soft); color: var(--ok-deep);
+}
+.chip--alarm { background: var(--alarm-soft); color: var(--alarm); }
+.chip--neutral { background: #F1EFE9; color: var(--muted); }
+.chip--brass { background: rgba(176,141,87,.14); color: var(--brass); }
+.dot { width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; }
+
+/* ── Reveal on scroll ──────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(18px);
+          transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Site furniture — header and footer
+   ═══════════════════════════════════════════════════════════════════ */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  /* 93%, not the 82% this started at. The page alternates warm-white and
+     near-black bands, and at 82% the black showed through enough that the dark
+     "Pruuf" wordmark and the nav links fell below readable contrast every time
+     a dark section passed under the header — invisible in a screenshot of the
+     top of the page, and obvious the moment you scroll. */
+  background: color-mix(in srgb, var(--canvas) 93%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s ease, background .3s ease;
+}
+.site-header.stuck { border-bottom-color: var(--hairline); }
+.site-header .wrap {
+  display: flex; align-items: center; gap: 1.25rem; min-height: 68px;
+}
+
+.brand {
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em;
+  text-decoration: none; color: var(--ink); margin-right: auto;
+}
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto;
+  background: linear-gradient(135deg, #12A05C, #0B7A45);
+  display: grid; place-items: center;
+  box-shadow: 0 2px 8px -2px rgba(11,122,69,.5);
+}
+.brand-mark svg { width: 21px; height: 21px; }
+
+.site-nav { display: flex; align-items: center; gap: 1.6rem; }
+/* `:not(.btn)`, for the second time and the same reason as in `.night`.
+   `.site-nav a` outspecifies `.btn`, so the "Get Pruuf" button rendered its
+   label in dark ink ON the dark-green pill — the single most clicked control on
+   the site, effectively invisible, on every page.
+
+   Any rule that colours links by ancestor has to exclude buttons. There is no
+   third place that does this; if a fourth is ever added, it needs the same
+   exclusion. */
+.site-nav a:not(.btn) {
+  text-decoration: none; color: var(--ink-soft); font-weight: 600;
+  font-size: .975rem; padding: .35rem 0; position: relative;
+}
+.site-nav a:not(.btn)::after {
+  content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px;
+  background: var(--ok); transition: right .3s var(--ease); border-radius: 2px;
+}
+.site-nav a:not(.btn):hover { color: var(--ink); }
+.site-nav a:not(.btn):hover::after,
+.site-nav a:not(.btn)[aria-current="page"]::after { right: 0; }
+.site-nav a:not(.btn)[aria-current="page"] { color: var(--ink); }
+
+.nav-toggle {
+  display: none; background: none; border: 1.5px solid var(--hairline-strong);
+  border-radius: 10px; width: 44px; height: 44px; cursor: pointer;
+  align-items: center; justify-content: center;
+}
+.nav-toggle svg { width: 20px; height: 20px; }
+
+@media (max-width: 60rem) {
+  .nav-toggle { display: inline-flex; }
+  .site-nav {
+    position: absolute; inset: 100% 0 auto; flex-direction: column;
+    align-items: stretch; gap: 0; padding: .5rem var(--page) 1.25rem;
+    background: var(--canvas); border-bottom: 1px solid var(--hairline);
+    box-shadow: var(--shadow); display: none;
+  }
+  .site-nav.open { display: flex; }
+  .site-nav a:not(.btn) {
+    padding: .95rem 0; border-bottom: 1px solid var(--hairline); font-size: 1.0625rem;
+  }
+  .site-nav a:not(.btn)::after { display: none; }
+  .site-nav .btn { margin-top: .9rem; }
+}
+
+.site-footer { background: var(--night); color: var(--on-night-muted); padding-block: clamp(3.5rem,2rem+5vw,5.5rem) 3rem; }
+.site-footer a { color: var(--on-night-muted); text-decoration: none; }
+.site-footer a:hover { color: var(--on-night); text-decoration: underline; }
+.site-footer h4 {
+  color: var(--brass); font-size: .75rem; text-transform: uppercase;
+  letter-spacing: .16em; margin: 0 0 1rem; font-weight: 700;
+}
+.footer-cols { display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+.footer-cols ul { list-style: none; margin: 0; padding: 0; }
+.footer-cols li { margin-bottom: .6rem; }
+.footer-base {
+  margin-top: 3.5rem; padding-top: 1.75rem; border-top: 1px solid var(--night-line);
+  display: flex; flex-wrap: wrap; gap: 1rem 2rem; justify-content: space-between;
+  font-size: .875rem;
+}
+.site-footer .brand { color: var(--on-night); }
+
+/* ── The honesty note. Deliberately not styled as a warning: it is a claim
+   about character, not a disclaimer to be skimmed past. ──────────────── */
+.note {
+  border-left: 3px solid var(--brass); padding: .3rem 0 .3rem 1.25rem;
+  color: var(--muted); font-size: var(--fs-small); line-height: 1.6;
+}
+.night .note { color: var(--on-night-muted); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   The live phone — a real iPhone drawn in CSS
+   ═══════════════════════════════════════════════════════════════════
+   Geometry from the App Store frame research (AppStore/frame_devices.py):
+   the display corner radius on a modern iPhone is 9.42% of device width, not
+   the ~4% that makes a render look like an Android handset. The Dynamic
+   Island is 50.5% of the notch cutout width it replaced.                  */
+.phone {
+  /* 272, not 300. At 300 the phone plus the notification column exceeded the
+     hero's half-width at every desktop size, so the feed wrapped underneath and
+     the "she tapped / her daughter is told" juxtaposition — the entire point of
+     the demo — was lost to a scroll. */
+  --w: 272px;
+  width: var(--w); flex: 0 0 auto; position: relative;
+  aspect-ratio: 300 / 649;   /* 1242x2688, the device this demo is drawn as */
+  border-radius: calc(var(--w) * .126);
+  padding: calc(var(--w) * .0113);
+  background: linear-gradient(150deg, #6E6E73 0%, #3A3A3C 18%, #8E8E93 42%,
+                                      #48484A 62%, #2C2C2E 84%, #636366 100%);
+  box-shadow: var(--shadow-deep), 0 0 0 1px rgba(0,0,0,.35) inset;
+}
+.phone::after {                       /* the polished chamfer at the glass edge */
+  content: ""; position: absolute; inset: calc(var(--w) * .0075);
+  border-radius: calc(var(--w) * .1185);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.30) inset;
+  pointer-events: none; z-index: 3;
+}
+.phone-screen {
+  position: relative; height: 100%; overflow: hidden;
+  border-radius: calc(var(--w) * .1142);
+  background: var(--canvas); color: var(--ink);
+  display: flex; flex-direction: column;
+}
+.phone-island {
+  position: absolute; top: calc(var(--w) * .028); left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--w) * .278); height: calc(var(--w) * .082);
+  background: #000; border-radius: 999px; z-index: 4;
+}
+.phone-status {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: calc(var(--w) * .042) calc(var(--w) * .073) calc(var(--w) * .012);
+  font-size: calc(var(--w) * .043); font-weight: 700; letter-spacing: -.01em;
+}
+.phone-body {
+  flex: 1; display: flex; flex-direction: column;
+  padding: calc(var(--w) * .055) calc(var(--w) * .058) calc(var(--w) * .07);
+  min-height: 0;
+}
+.phone-home {
+  position: absolute; bottom: calc(var(--w) * .022); left: 50%;
+  transform: translateX(-50%); width: 36%; height: 3.5px;
+  background: rgba(22,21,15,.32); border-radius: 999px; z-index: 4;
+}
+
+/* ── The watch, same treatment ─────────────────────────────────────── */
+.watch {
+  --w: 168px; width: var(--w); flex: 0 0 auto; position: relative;
+  aspect-ratio: 168 / 204;
+  border-radius: calc(var(--w) * .215);
+  padding: calc(var(--w) * .036);
+  background: linear-gradient(150deg, #8E8E93, #3A3A3C 40%, #6E6E73 70%, #2C2C2E);
+  box-shadow: var(--shadow-deep);
+}
+.watch-screen {
+  height: 100%; border-radius: calc(var(--w) * .182); background: #000;
+  color: #fff; overflow: hidden; display: flex; flex-direction: column;
+  padding: calc(var(--w) * .07) calc(var(--w) * .06);
+  text-align: center; justify-content: center; gap: .4rem;
+}
+
+/* ── In-phone app chrome ────────────────────────────────────────────
+   These are the app's own components at web scale, laid out against the real
+   capture in AppStore/screenshots/iphone-6.5/. The first version of this demo
+   invented a green pill button, which meant the most prominent thing on the
+   landing page was a picture of an app that does not exist. Sizes are all in
+   `em` of --w so the whole phone scales as one object.                     */
+.app-bar {
+  display: flex; align-items: center; justify-content: center;
+  position: relative; padding-bottom: calc(var(--w) * .035);
+}
+.app-wordmark {
+  font-size: calc(var(--w) * .047); font-weight: 800;
+  letter-spacing: calc(var(--w) * .019); color: var(--inkSoft, #3A3833);
+}
+.app-gear {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  width: calc(var(--w) * .105); height: calc(var(--w) * .105);
+  border-radius: 50%; background: #fff; display: grid; place-items: center;
+  box-shadow: 0 1px 4px rgba(22,21,15,.18);
+}
+.app-gear svg { width: 58%; height: 58%; }
+
+.app-greeting {
+  font-size: calc(var(--w) * .042); font-weight: 700;
+  letter-spacing: calc(var(--w) * .004); text-transform: uppercase;
+  color: var(--muted);
+}
+.app-due {
+  display: flex; align-items: center; gap: calc(var(--w) * .022);
+  font-size: calc(var(--w) * .055); font-weight: 800; letter-spacing: -.01em;
+  margin-top: calc(var(--w) * .008);
+}
+.app-due svg { width: calc(var(--w) * .05); height: calc(var(--w) * .05); flex: 0 0 auto; }
+.app-done-chip {
+  margin-left: auto; font-size: calc(var(--w) * .035); font-weight: 800;
+  letter-spacing: .04em; color: var(--ok-deep); background: var(--ok-soft);
+  padding: calc(var(--w) * .014) calc(var(--w) * .033); border-radius: 999px;
+}
+
+/* The big button. Dark when there is something to do, green when it is done. */
+.app-big {
+  flex: 1; min-height: 0; width: 100%; border: none; cursor: pointer;
+  margin: calc(var(--w) * .04) 0;
+  border-radius: calc(var(--w) * .075);
+  background: linear-gradient(160deg, #2C2A24, #121110);
+  color: #fff; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: calc(var(--w) * .015);
+  font-family: var(--round);
+  box-shadow: 0 14px 30px -16px rgba(22,21,15,.75);
+  transition: transform .18s var(--ease), filter .18s ease;
+}
+.app-big:hover { filter: brightness(1.12); }
+.app-big:active { transform: scale(.985); transition-duration: .06s; }
+.app-big[disabled] { cursor: default; }
+/* The concentric rings behind the label, as the app draws them. */
+.app-big::before, .app-big::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%); border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.09); pointer-events: none;
+}
+.app-big::before { width: calc(var(--w) * .70); aspect-ratio: 1; }
+.app-big::after  { width: calc(var(--w) * .56); aspect-ratio: 1; }
+.app-big--done {
+  background: linear-gradient(160deg, #12A05C, #0B7A45);
+  box-shadow: 0 14px 30px -16px rgba(11,122,69,.85);
+}
+.app-big--help {
+  background: linear-gradient(160deg, #D8232F, #A30E1A);
+  box-shadow: 0 14px 30px -16px rgba(163,14,26,.85);
+}
+.app-big-title {
+  font-size: calc(var(--w) * .135); font-weight: 900; letter-spacing: -.02em;
+  line-height: 1; position: relative;
+}
+.app-big-title--small { font-size: calc(var(--w) * .078); line-height: 1.15; text-align: center; }
+.app-big-sub {
+  font-size: calc(var(--w) * .048); font-weight: 600; opacity: .92;
+  text-align: center; position: relative; padding: 0 calc(var(--w) * .06);
+  line-height: 1.3;
+}
+.app-big-sub--strong { font-weight: 800; opacity: 1; }
+.app-tick { width: calc(var(--w) * .19); height: calc(var(--w) * .19); position: relative; }
+
+/* The two bars under it. */
+.app-help {
+  width: 100%; border: none; cursor: pointer; color: #fff;
+  border-radius: calc(var(--w) * .052);
+  background: linear-gradient(150deg, #D8232F, #A30E1A);
+  padding: calc(var(--w) * .042) calc(var(--w) * .05);
+  font-family: var(--round); text-align: left;
+  display: flex; align-items: center; gap: calc(var(--w) * .035);
+  transition: filter .18s ease;
+}
+.app-help:hover { filter: brightness(1.08); }
+.app-help svg { width: calc(var(--w) * .062); height: calc(var(--w) * .062); flex: 0 0 auto; }
+.app-help-title { font-size: calc(var(--w) * .058); font-weight: 900; letter-spacing: .01em; }
+.app-help-sub { font-size: calc(var(--w) * .042); font-weight: 600; opacity: .93; }
+
+.app-loved {
+  width: 100%; margin-top: calc(var(--w) * .03); cursor: pointer;
+  border: 1px solid var(--hairline); background: #fff; color: var(--ink);
+  border-radius: calc(var(--w) * .052);
+  padding: calc(var(--w) * .046); font-family: var(--round);
+  font-size: calc(var(--w) * .055); font-weight: 800; letter-spacing: .01em;
+  transition: background .18s ease;
+}
+.app-loved:hover { background: var(--canvas); }
+
+/* A notification, as iOS draws it. */
+.notif {
+  display: flex; gap: .75rem; align-items: flex-start; text-align: left;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(22,21,15,.07);
+  border-radius: 18px; padding: .85rem .95rem;
+  box-shadow: 0 12px 34px -16px rgba(22,21,15,.5);
+}
+.notif-icon {
+  width: 34px; height: 34px; border-radius: 9px; flex: 0 0 auto;
+  background: linear-gradient(135deg, #12A05C, #0B7A45);
+  display: grid; place-items: center;
+}
+.notif-icon svg { width: 20px; height: 20px; }
+.notif-icon--alarm { background: linear-gradient(135deg, #D8232F, #A30E1A); }
+.notif-title { font-weight: 800; font-size: .875rem; letter-spacing: -.01em;
+               display: flex; justify-content: space-between; gap: .5rem; }
+.notif-time { font-weight: 600; color: var(--muted); font-size: .75rem; flex: 0 0 auto; }
+.notif-body { font-size: .8125rem; color: var(--ink-soft); line-height: 1.4; margin-top: .1rem; }
+
+.slide-in { animation: slideIn .55s var(--ease) both; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-14px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+.fade-swap { animation: fadeSwap .4s var(--ease) both; }
+@keyframes fadeSwap { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ── Device photography ────────────────────────────────────────────── */
+.device-img { filter: drop-shadow(0 40px 60px rgba(22,21,15,.28)); }
+.night .device-img { filter: drop-shadow(0 40px 70px rgba(0,0,0,.7)); }
+
+/* ── Numbered steps ────────────────────────────────────────────────── */
+/* Quiet, but still perceivable. At `--hairline-strong` these measured 1.48:1
+   against white — invisible to anybody with reduced contrast sensitivity, which
+   is a large share of the people reading this. `--faint` keeps the ornamental
+   look and clears 3:1 at this size. */
+.step-num {
+  font-family: var(--serif); font-size: 2.6rem; line-height: 1;
+  color: var(--faint); font-weight: 600; margin-bottom: .6rem;
+}
+.night .step-num { color: var(--night-line); }
+
+/* ── Pricing ───────────────────────────────────────────────────────── */
+.price { font-family: var(--serif); font-size: 3.25rem; line-height: 1;
+         font-weight: 600; letter-spacing: -.03em; }
+.price small { font-family: var(--round); font-size: 1rem; font-weight: 600;
+               color: var(--muted); letter-spacing: 0; }
+
+.toggle {
+  display: inline-flex; padding: 4px; border-radius: 999px;
+  background: #F1EFE9; border: 1px solid var(--hairline);
+}
+.toggle button {
+  border: none; background: none; cursor: pointer; border-radius: 999px;
+  padding: .6rem 1.25rem; font-weight: 700; font-size: .95rem; color: var(--muted);
+  transition: background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.toggle button[aria-pressed="true"] {
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow);
+}
+
+.tick-list { list-style: none; margin: 0; padding: 0; }
+/* The tick is positioned, not a flex item.
+   As `display:flex` on the <li>, every child became a flex item — including
+   the bare text after a <strong>. So "**No location tracking.** Not optional,
+   not buried in a setting…" laid out as two narrow columns side by side
+   instead of one sentence, on the very block that is supposed to read as
+   plain-spoken. Inline flow keeps a bolded lead-in part of its own paragraph. */
+.tick-list li {
+  position: relative; padding-left: 1.6rem; margin-bottom: .7rem;
+}
+.tick-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 0;
+  color: var(--ok); font-weight: 800;
+}
+.night .tick-list li::before { color: #35C77E; }
+.tick-list--cross li::before { content: "✕"; color: var(--muted); }
+
+/* ── FAQ. Native <details>, so it works with JavaScript off. ────────── */
+.faq { border-top: 1px solid var(--hairline); }
+.faq details { border-bottom: 1px solid var(--hairline); }
+.faq summary {
+  cursor: pointer; list-style: none; padding: 1.4rem 3rem 1.4rem 0;
+  font-weight: 700; font-size: 1.0625rem; position: relative;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+"; position: absolute; right: .4rem; top: 50%;
+  transform: translateY(-50%); font-size: 1.6rem; font-weight: 400;
+  color: var(--muted); transition: transform .3s var(--ease);
+}
+.faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.faq summary:hover { color: var(--ok-deep); }
+.faq-body { padding: 0 3rem 1.5rem 0; color: var(--ink-soft); max-width: var(--measure); }
+
+/* ── Tables ────────────────────────────────────────────────────────── */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.data {
+  width: 100%; border-collapse: collapse; font-size: 1rem; min-width: 34rem;
+}
+table.data th, table.data td {
+  padding: 1rem 1.15rem; text-align: left; border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+table.data th {
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--muted); font-weight: 700; border-bottom-color: var(--hairline-strong);
+}
+table.data tr:last-child td { border-bottom: none; }
+table.data .yes { color: var(--ok-deep); font-weight: 700; }
+table.data .no  { color: var(--muted); }
+.night table.data th, .night table.data td { border-bottom-color: var(--night-line); }
+.night table.data th { color: var(--brass); }
+
+/* ── Forms ─────────────────────────────────────────────────────────── */
+.field { margin-bottom: 1.35rem; }
+.field label {
+  display: block; font-weight: 700; font-size: .9375rem; margin-bottom: .45rem;
+}
+.field .hint { font-weight: 500; color: var(--muted); font-size: .875rem; }
+.input, .textarea, .select {
+  width: 100%; padding: .95rem 1.05rem; background: var(--surface);
+  border: 1.5px solid var(--hairline-strong); border-radius: var(--r-md);
+  font-size: 1.0625rem; transition: border-color .2s ease, box-shadow .2s ease;
+}
+.input:focus, .textarea:focus, .select:focus {
+  border-color: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); outline: none;
+}
+.textarea { min-height: 9rem; resize: vertical; line-height: 1.55; }
+.select { appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%236E6A62' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1.05rem center;
+  background-size: 12px; padding-right: 2.75rem;
+}
+.field-error { color: var(--alarm); font-size: .875rem; font-weight: 600; margin-top: .4rem; }
+.input[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--alarm); }
+
+/* The honeypot. Off-screen rather than display:none — some bots skip anything
+   that is display:none, and every one of them fills a field called "website". */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-status { border-radius: var(--r-md); padding: 1rem 1.15rem; font-weight: 600;
+               margin-bottom: 1.25rem; }
+.form-status--err { background: var(--alarm-soft); color: var(--alarm); }
+.form-status--ok  { background: var(--ok-soft); color: var(--ok-deep); }
+
+/* ── The embedded dashboard ────────────────────────────────────────── */
+.macbook {
+  position: relative; width: 100%; max-width: 62rem; margin-inline: auto;
+}
+.macbook-lid {
+  background: linear-gradient(160deg, #D8D8DC 0%, #A9A9AE 25%, #E3E3E6 48%,
+                                      #97979C 72%, #C8C8CC 100%);
+  border-radius: 20px 20px 6px 6px; padding: 12px 12px 20px;
+  box-shadow: var(--shadow-deep), 0 0 0 1px rgba(0,0,0,.20) inset;
+}
+.macbook-screen {
+  position: relative; background: #000; border-radius: 8px; overflow: hidden;
+  aspect-ratio: 16 / 10; box-shadow: 0 0 0 2px #1A1A1C;
+}
+.macbook-screen iframe { width: 100%; height: 100%; border: 0; display: block; background: #FBFAF7; }
+/* The camera sits in the BEZEL, above the glass.
+   This started life as a notch drawn inside `.macbook-screen`, which put a
+   black tab straight across the dashboard's search field and top bar — on a
+   real machine the menu bar makes room for the notch, and an embedded web app
+   has no menu bar to do that. A camera dot reads as a MacBook without ever
+   covering the thing we are asking people to click. */
+.macbook-camera {
+  width: 6px; height: 6px; border-radius: 50%; margin: 0 auto 5px;
+  background: radial-gradient(circle at 35% 35%, #4A4A50, #111 70%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.22);
+}
+.macbook-base {
+  height: 13px; margin: 0 auto; width: 106%; max-width: none;
+  transform: translateX(-2.83%);
+  background: linear-gradient(180deg, #BDBDC2, #86868B 55%, #5A5A5F);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 22px 34px -20px rgba(0,0,0,.65);
+}
+.macbook-base::after {
+  content: ""; display: block; width: 14%; height: 5px; margin: 0 auto;
+  background: rgba(0,0,0,.22); border-radius: 0 0 6px 6px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Long documents — privacy, terms, support
+   ═══════════════════════════════════════════════════════════════════
+   These are read by somebody trying to decide whether to trust us with
+   their mother, and by an App Review engineer. Both are better served by
+   generous type on a narrow measure than by anything clever.            */
+.doc { max-width: 44rem; }
+.doc h2 {
+  font-size: clamp(1.35rem, 1.2rem + 0.7vw, 1.7rem); font-weight: 800;
+  margin: 3rem 0 .9rem; letter-spacing: -0.02em; scroll-margin-top: 5rem;
+}
+.doc h2:first-of-type { margin-top: 2rem; }
+.doc h3 { font-size: 1.15rem; font-weight: 700; margin: 2rem 0 .6rem; }
+.doc p, .doc li { color: var(--ink-soft); }
+.doc ul, .doc ol { padding-left: 1.35rem; margin: 0 0 1.15em; }
+.doc li { margin: .5rem 0; }
+.doc .updated {
+  font-size: var(--fs-small); color: var(--muted);
+  padding-bottom: 1.75rem; border-bottom: 1px solid var(--hairline);
+}
+/* The one thing in a legal document that must not be skimmed past. */
+.doc .callout {
+  background: var(--alarm-soft); border-radius: var(--r-md);
+  padding: 1.35rem 1.5rem; margin: 2rem 0;
+}
+.doc .callout p { color: #7A0B14; margin-bottom: .8em; }
+.doc .callout p:last-child { margin-bottom: 0; }
+
+/* ── Utilities ─────────────────────────────────────────────────────── */
+.stack > * + * { margin-top: var(--flow, 1.15rem); }
+.mt-0 { margin-top: 0; } .mb-0 { margin-bottom: 0; }
+.mt-2 { margin-top: 2rem; } .mt-3 { margin-top: 3rem; }
+.hr { height: 1px; background: var(--hairline); border: 0; margin-block: var(--gap); }
+.night .hr { background: var(--night-line); }
+.nowrap { white-space: nowrap; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

@@ -1,0 +1,3 @@
+# Tooling output, not part of the published site.
+__pycache__/
+.DS_Store

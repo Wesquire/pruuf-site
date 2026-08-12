@@ -1,14 +1,714 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pruuf — Peace of mind, one tap a day</title><link rel="stylesheet" href="style.css"></head>
-<body><div class="wrap">
-<header><span class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.7-7.5-10A4.5 4.5 0 0 1 12 8.5 4.5 4.5 0 0 1 19.5 11c0 5.3-7.5 10-7.5 10Z" fill="#fff"/><path d="M8.8 12.4l2.3 2.3 4.3-4.6" stroke="#0B7A45" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h1>Pruuf</h1></header>
-<p class="tag">Peace of mind, one tap a day.</p>
-<p>Pruuf is the simplest way to tell the people who love you that you're OK. Open the app, tap one big button, and everyone you've added gets a notification. If you don't tap it by your chosen time, they're alerted automatically.</p>
-<div class="card"><p style="margin:0"><strong>Pruuf is not an emergency service.</strong> It notifies the family members you have added — it does not contact emergency services or any monitoring centre.</p></div>
-<h2>About</h2>
-<p>Pruuf is made by <strong>The ScoutsOn Watch Company</strong>.</p>
-<h2>Pages</h2>
-<p><a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="support.html">Support</a></p>
-<footer>© 2026 The ScoutsOn Watch Company · <a href="privacy.html">Privacy Policy</a> · <a href="support.html">Support</a></footer>
-</div></body></html>
+<title>Pruuf — One tap. And everyone stops worrying.</title>
+<meta name="description" content="Pruuf is a daily check-in for the people you love. One tap says “I’m OK.” If the tap doesn’t come, the family is told automatically — from our servers, not from the phone.">
+<link rel="canonical" href="https://pruuf.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pruuf — One tap. And everyone stops worrying.">
+<meta property="og:description" content="A daily check-in for the people you love. One tap says “I’m OK.” If it doesn’t come, the family is told.">
+<meta property="og:image" content="https://pruuf.app/assets/img/og-card.png">
+<meta property="og:url" content="https://pruuf.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FBFAF7">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/pruuf.css">
+<script src="assets/pruuf.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 21s-7.5-4.7-7.5-10A4.5 4.5 0 0 1 12 8.5 4.5 4.5 0 0 1 19.5 11c0 5.3-7.5 10-7.5 10Z" fill="#fff"/>
+        <path d="M8.8 12.4l2.3 2.3 4.3-4.6" stroke="#0B7A45" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg></span>Pruuf
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <nav class="site-nav" id="nav" aria-label="Main">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="enterprise.html">For care providers</a>
+      <a href="contact.html">Contact</a>
+      <a class="btn btn--ok btn--sm js-cta-app" href="#launch" data-live-label="Download on the App Store">
+        <span class="js-cta-label">Get Pruuf</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HERO — the product, live and tappable, above the fold
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="split" style="align-items:center">
+
+      <div class="reveal">
+        <p class="eyebrow">Peace of mind, one tap a day</p>
+        <h1 class="display">One tap.<br>And everyone<br>stops worrying.</h1>
+        <p class="lead" style="margin-top:1.5rem;max-width:30rem">
+          Pruuf sends one message to the people who love you — <em>I’m OK today</em>.
+          And on the morning it doesn’t come, it tells them that too.
+        </p>
+        <div class="btn-row" style="margin-top:2rem">
+          <a class="btn btn--ok js-cta-app" href="#launch" data-live-label="Download on the App Store">
+            <span class="js-cta-label">Get the launch link</span>
+          </a>
+          <a class="btn btn--ghost" href="#how">See how it works</a>
+        </div>
+        <p class="small muted" style="margin-top:1.4rem">
+          Free forever for the person checking in. 15-day free trial for the family.
+        </p>
+      </div>
+
+      <!-- The live demo. Every string below is a real string from the app. -->
+      <div class="reveal" id="demo">
+        <div style="display:flex;gap:clamp(1rem,3vw,2rem);align-items:flex-start;flex-wrap:wrap">
+          <div class="phone">
+            <div class="phone-island"></div>
+            <div class="phone-screen">
+              <div class="phone-status">
+                <span id="demo-clock">8:04</span>
+                <span aria-hidden="true">▮▮▮ ▮</span>
+              </div>
+              <div class="phone-body" id="demo-screen"></div>
+              <div class="phone-home"></div>
+            </div>
+          </div>
+
+          <div style="flex:1 1 13rem;min-width:12.5rem;padding-top:.5rem">
+            <p class="eyebrow" style="margin-bottom:.75rem">Her daughter’s phone</p>
+            <div id="demo-feed"></div>
+            <p class="small" id="demo-caption"
+               style="margin:1.1rem 0 1.25rem;font-weight:600;color:var(--ok-deep)"></p>
+            <div class="btn-row">
+              <button class="btn btn--ghost btn--sm" id="demo-miss" type="button">
+                Show a day she doesn’t
+              </button>
+              <button class="btn btn--ghost btn--sm" id="demo-replay" type="button">
+                Start again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     WHY IT EXISTS — the story, told plainly
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section night">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <p class="eyebrow">Why this exists</p>
+        <h2 class="h1">The danger was never<br>the fall itself.</h2>
+      </div>
+      <div class="reveal prose">
+        <p>
+          Every family with someone living alone runs the same quiet system.
+          Somebody calls each morning. If there’s no answer they call again.
+          Then they call the neighbour. Then they get in the car.
+        </p>
+        <p>
+          It works, right up until the morning somebody is in a meeting.
+        </p>
+        <p>
+          Pruuf started with one woman in her own house, who was fine, and a
+          daughter three states away who called every morning at nine — not
+          because there was anything to say, but because the silence was
+          unbearable.
+        </p>
+        <p style="font-family:var(--serif);font-size:var(--fs-h3);line-height:1.4;
+                  color:var(--on-night);border-left:2px solid var(--brass);
+                  padding-left:1.25rem;margin-top:2rem">
+          A daily check-in doesn’t stop anything from happening. It means nobody
+          is alone with it for three days.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CHOOSE YOUR SIDE — mirrors the app's own role screen
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="families">
+  <div class="wrap">
+    <div class="center prose reveal" style="margin-bottom:3rem">
+      <p class="eyebrow" style="justify-content:center">Two people, one app</p>
+      <h2 class="h1">Which one are you?</h2>
+      <p class="lead" style="margin-top:1rem">
+        Pruuf asks this on the very first screen, and then never asks you to
+        think about the other side again.
+      </p>
+    </div>
+
+    <div class="grid grid--2" role="tablist" aria-label="Choose your side" style="margin-bottom:2.5rem">
+      <button class="card card--link" role="tab" data-role-tab="sender" aria-selected="true"
+              aria-controls="panel-sender" id="tab-sender" type="button" style="text-align:left;cursor:pointer">
+        <span class="chip">I’ll be the one checking in</span>
+        <h3 class="h3" style="margin-top:1rem">Someone worries about me</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          You’re living independently and you’d rather not be phoned every
+          morning to prove it.
+        </p>
+      </button>
+      <button class="card card--link" role="tab" data-role-tab="receiver" aria-selected="false"
+              aria-controls="panel-receiver" id="tab-receiver" type="button" style="text-align:left;cursor:pointer">
+        <span class="chip chip--neutral">I want to know they’re OK</span>
+        <h3 class="h3" style="margin-top:1rem">I worry about someone</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          A parent, a grandparent, a neighbour. You want to know without having
+          to ask every day.
+        </p>
+      </button>
+    </div>
+
+    <div data-role-panel="sender" id="panel-sender" role="tabpanel" aria-labelledby="tab-sender">
+      <div class="split split--wide-right">
+        <div>
+          <h3 class="h2" style="margin-bottom:1.5rem">It asks one thing of you, once a day.</h3>
+          <ul class="tick-list lead">
+            <li>No account. No password. No username to remember.</li>
+            <li>One button, big enough to hit without your glasses.</li>
+            <li>A reminder half an hour before your time, so it’s hard to forget.</li>
+            <li>Nothing else on the screen to press by mistake.</li>
+            <li>It never shows anybody where you are.</li>
+            <li><strong>Free forever.</strong> The person checking in is never charged.</li>
+          </ul>
+        </div>
+        <picture>
+          <source srcset="assets/img/iphone-checkin.webp" type="image/webp">
+          <img class="device-img" src="assets/img/iphone-checkin.png" width="620" height="1122"
+               style="max-width:290px;margin-inline:auto"
+               alt="The Pruuf check-in screen on an iPhone: a large green I’M OK button filling most of the display.">
+        </picture>
+      </div>
+    </div>
+
+    <div data-role-panel="receiver" id="panel-receiver" role="tabpanel" aria-labelledby="tab-receiver" hidden>
+      <div class="split split--wide-right">
+        <div>
+          <h3 class="h2" style="margin-bottom:1.5rem">You’ll know before you’d have thought to ask.</h3>
+          <ul class="tick-list lead">
+            <li>A notification the moment they check in.</li>
+            <li>An urgent alert if their time passes and they haven’t.</li>
+            <li>An urgent alert the second they press <strong>I NEED HELP</strong>.</li>
+            <li>Call or text them straight from the alert.</li>
+            <li><strong>“I’ve got this”</strong> — so three siblings don’t all ring at once.</li>
+            <li>Follow your mother and your father on one subscription.</li>
+          </ul>
+        </div>
+        <picture>
+          <source srcset="assets/img/iphone-family.webp" type="image/webp">
+          <img class="device-img" src="assets/img/iphone-family.png" width="620" height="1122"
+               style="max-width:290px;margin-inline:auto"
+               alt="The family view on an iPhone, showing one person checked in and one who has not.">
+        </picture>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HOW IT WORKS
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="how" style="background:linear-gradient(180deg,transparent,#F4F1EA 40%,transparent)">
+  <div class="wrap">
+    <div class="center prose reveal" style="margin-bottom:3.5rem">
+      <p class="eyebrow" style="justify-content:center">How it works</p>
+      <h2 class="h1">Four steps, then never again.</h2>
+      <p class="lead" style="margin-top:1rem">
+        Setting Pruuf up takes about three minutes, once. After that it is a
+        single tap a day, forever.
+      </p>
+    </div>
+
+    <div class="grid grid--4">
+      <div class="card reveal">
+        <div class="step-num">01</div>
+        <h3 class="h3">Choose the time</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          Pick the time you’ll have tapped by — say 10:00 in the morning. That
+          is the whole of the promise.
+        </p>
+      </div>
+      <div class="card reveal">
+        <div class="step-num">02</div>
+        <h3 class="h3">Add your people</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          Pick them out of your contacts. Pruuf writes the invitation text for
+          you and gives you a six-character code.
+        </p>
+      </div>
+      <div class="card reveal">
+        <div class="step-num">03</div>
+        <h3 class="h3">They type the code</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          They install Pruuf and enter those six characters. Connected. No
+          accounts on either side, so nothing to lock anyone out.
+        </p>
+      </div>
+      <div class="card reveal">
+        <div class="step-num">04</div>
+        <h3 class="h3">Tap once a day</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          Everyone gets told you’re fine. That’s the entire routine, and it
+          takes about a second.
+        </p>
+      </div>
+    </div>
+
+    <div class="split split--wide-left reveal" style="margin-top:clamp(3rem,6vw,5rem)">
+      <picture>
+        <source srcset="assets/img/iphone-people.webp" type="image/webp">
+        <img class="device-img" src="assets/img/iphone-people.png" width="620" height="1122"
+             style="max-width:280px;margin-inline:auto"
+             alt="The My Loved Ones screen, showing the six-character invite code and who is connected.">
+      </picture>
+      <div>
+        <p class="eyebrow">The six characters</p>
+        <h3 class="h2">There is no password, because there is no account.</h3>
+        <p class="lead" style="margin-top:1.25rem">
+          This is the single decision that makes Pruuf usable by an 82-year-old.
+          There is nothing to sign up for, nothing to verify, nothing to reset
+          at eleven o’clock at night. A code connects two people, and that is
+          the whole of the security model — which also means there is no
+          password of yours for anybody to steal.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     THE SAFETY NET — the actual differentiator
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section night" id="safety">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <p class="eyebrow">The part that matters</p>
+        <h2 class="h1">The alert doesn’t<br>come from her phone.</h2>
+      </div>
+      <div class="reveal prose">
+        <p>
+          Almost everything that calls itself a check-in app is a reminder
+          running on the phone of the person being checked on. Which means a
+          dead battery, a phone left charging in the bedroom, or a phone at the
+          bottom of a handbag all look exactly like a phone that simply had
+          nothing to say.
+        </p>
+        <p>
+          Pruuf’s alerts run on our servers. At her check-in time the server
+          looks for a tap. If there isn’t one, everyone connected to her is
+          told — <strong style="color:var(--on-night)">whether her phone is on,
+          off, flat, or lost down the side of a chair</strong>.
+        </p>
+        <p>
+          The same is true of the help button. Press <strong style="color:var(--on-night)">I
+          NEED HELP</strong> and your family is told immediately. Press it and
+          then find you can’t respond — because you’ve fallen, or dropped the
+          phone — and they are alerted anyway, five minutes later, without you
+          doing anything at all.
+        </p>
+        <p class="note" style="margin-top:2rem">
+          Pruuf notifies the family members you have added. It is not an
+          emergency service: it does not contact 911, an ambulance, or a
+          monitoring centre. We say so here rather than in a footnote, because
+          it is the kind of thing you should find out now and not later.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     EVERY DEVICE
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="center prose reveal" style="margin-bottom:3rem">
+      <p class="eyebrow" style="justify-content:center">iPhone · iPad · Apple Watch</p>
+      <h2 class="h1">Whichever one is nearest.</h2>
+      <p class="lead" style="margin-top:1rem">
+        One account across every device you own. Tap from the watch on your
+        wrist without going to find the phone — which, on the days it matters
+        most, is the difference between checking in and meaning to.
+      </p>
+    </div>
+
+    <div class="reveal" style="display:flex;align-items:flex-end;justify-content:center;
+                               gap:clamp(1rem,4vw,3.5rem);flex-wrap:wrap">
+      <picture>
+        <source srcset="assets/img/iphone-done.webp" type="image/webp">
+        <img class="device-img" src="assets/img/iphone-done.png" width="620" height="1122"
+             style="max-width:220px" alt="Pruuf on iPhone, showing the confirmation after checking in.">
+      </picture>
+      <picture>
+        <source srcset="assets/img/ipad-app.webp" type="image/webp">
+        <img class="device-img" src="assets/img/ipad-app.png" width="760" height="941"
+             style="max-width:340px" alt="Pruuf on an iPad, showing the same check-in screen at tablet size.">
+      </picture>
+      <picture>
+        <source srcset="assets/img/watch-checkin.webp" type="image/webp">
+        <img class="device-img" src="assets/img/watch-checkin.png" width="420" height="952"
+             style="max-width:150px" alt="Pruuf on an Apple Watch, showing the check-in button on the wrist.">
+      </picture>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     WHAT IT IS NOT — trust signal, deliberately prominent
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <p class="eyebrow">Plainly</p>
+        <h2 class="h1">What Pruuf<br>doesn’t do.</h2>
+        <p class="lead" style="margin-top:1.25rem;max-width:26rem">
+          A product for frightened families could sell almost anything. This is
+          the list we hold ourselves to.
+        </p>
+      </div>
+      <div class="reveal">
+        <ul class="tick-list tick-list--cross" style="font-size:1.0625rem">
+          <li><strong>No location tracking.</strong> Not optional, not buried in
+            a setting — Pruuf never asks for location and could not show it if
+            it wanted to.</li>
+          <li><strong>No cameras, microphones or health data.</strong></li>
+          <li><strong>No feed, streaks, badges or scores.</strong> Missing a day
+            is not a failure to be shamed for. It is a signal to act on.</li>
+          <li><strong>No selling of data, and no advertising or analytics
+            trackers</strong> of any kind in the app.</li>
+          <li><strong>No account to break into,</strong> because there are no
+            passwords at all.</li>
+          <li><strong>Not an emergency service.</strong> It tells the family you
+            added. It does not dispatch help.</li>
+        </ul>
+        <p style="margin-top:1.75rem">
+          <a class="arrow" href="privacy.html">Read the privacy policy</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PRICING
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="pricing" style="background:#F4F1EA">
+  <div class="wrap">
+    <div class="center prose reveal" style="margin-bottom:2.5rem">
+      <p class="eyebrow" style="justify-content:center">Pricing</p>
+      <h2 class="h1">The person checking in never pays.</h2>
+      <p class="lead" style="margin-top:1rem">
+        Charging an 80-year-old for the button that tells her family she’s alive
+        is not a business we want to be in. The family who wants the alerts pays,
+        once, for everyone they look after.
+      </p>
+    </div>
+
+    <div class="center" style="margin-bottom:2.5rem">
+      <div class="toggle" id="term-toggle" role="group" aria-label="Billing period">
+        <button type="button" data-term="monthly" aria-pressed="false">Monthly</button>
+        <button type="button" data-term="annual" aria-pressed="true">Yearly · save 16%</button>
+      </div>
+    </div>
+
+    <div class="grid grid--2" style="max-width:56rem;margin-inline:auto">
+      <div class="card reveal">
+        <span class="chip">Always free</span>
+        <h3 class="h3" style="margin-top:1rem">For the person checking in</h3>
+        <p class="price" style="margin:1.25rem 0 .25rem">$0</p>
+        <p class="muted small">Forever. Not a trial.</p>
+        <hr class="hr">
+        <ul class="tick-list">
+          <li>The I’M OK button</li>
+          <li>The I NEED HELP button</li>
+          <li>Your own reminder before your time</li>
+          <li>iPhone, iPad and Apple Watch</li>
+          <li>As many family members as you like</li>
+        </ul>
+      </div>
+
+      <div class="card reveal" style="border-color:var(--ok);box-shadow:var(--shadow-lift)">
+        <span class="chip">For the family</span>
+        <h3 class="h3" style="margin-top:1rem">Pruuf for Family</h3>
+        <p class="price" style="margin:1.25rem 0 .25rem">
+          <span data-price data-monthly="$9.99" data-annual="$99.99">$99.99</span>
+          <small data-price-note data-monthly="per month" data-annual="per year">per year</small>
+        </p>
+        <p class="muted small" data-annual-only>
+          That’s $8.33 a month — about 16% less than paying monthly.
+        </p>
+        <hr class="hr">
+        <ul class="tick-list">
+          <li>Alerts when a check-in is missed</li>
+          <li>Alerts when someone asks for help</li>
+          <li>Call, text and “I’ve got this” from the alert</li>
+          <li><strong>Everyone you look after, on one subscription</strong></li>
+          <li>15 days free. Cancel any time in Settings.</li>
+        </ul>
+        <div class="btn-row" style="margin-top:1.5rem">
+          <a class="btn btn--ok js-cta-app" href="#launch" data-live-label="Download on the App Store"
+             style="width:100%"><span class="js-cta-label">Get the launch link</span></a>
+        </div>
+      </div>
+    </div>
+
+    <p class="center small muted" style="margin-top:2rem;max-width:38rem;margin-inline:auto">
+      Billed by Apple through the App Store. If we ever lower the price, everyone
+      already subscribed gets the lower one — including you.
+      <a href="terms.html#pricing">How our pricing promise works</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FAQ
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="faq">
+  <div class="wrap" style="max-width:52rem">
+    <div class="reveal" style="margin-bottom:2rem">
+      <p class="eyebrow">Questions</p>
+      <h2 class="h1">The things people ask first.</h2>
+    </div>
+
+    <div class="faq reveal">
+      <details>
+        <summary>What if they forget to tap it?</summary>
+        <div class="faq-body">
+          <p>Then their family is told — which is the entire point. Pruuf does
+            not try to work out whether a missed day is forgetfulness or
+            something worse, because from the outside those look identical and
+            only one of them is safe to assume.</p>
+          <p>In practice, forgetting is rare: a reminder arrives on their own
+            phone 30 minutes before their time, and the routine settles in within
+            about a week. Families usually agree on a check-in time slightly
+            later than the real one, so an ordinary lie-in doesn’t start
+            anything.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Does it show me where they are?</summary>
+        <div class="faq-body">
+          <p>No — and it never will. Pruuf does not ask for location permission
+            and has no location data to show. It answers exactly one question:
+            have they said they’re OK today.</p>
+          <p>This is deliberate. The moment an app like this becomes a tracker,
+            the person being tracked stops wanting it on their phone, and an app
+            that gets deleted protects nobody.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Is my mother going to be able to use this?</summary>
+        <div class="faq-body">
+          <p>That is the question the whole app is designed around. There is no
+            account, no password and no username. Her screen has one enormous
+            button on it and almost nothing else. The text scales all the way up
+            if she has already turned text size up on her phone.</p>
+          <p>Setup is the only part that takes a moment, and it is normally done
+            by whoever is reading this, sitting next to her, once.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What happens if her phone is dead or lost?</summary>
+        <div class="faq-body">
+          <p>The alert still fires. Pruuf’s missed-check-in alerts run on our
+            servers rather than on her phone, so a flat battery, a phone in
+            another room, or a phone that has been left in a taxi all produce
+            the same result: her time passes, no tap arrives, and you are told.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can more than one of us get the alerts?</summary>
+        <div class="faq-body">
+          <p>Yes. She can add as many family members as she likes, and every one
+            of them is alerted. Whoever acts first can press “I’ve got this”,
+            which tells the others to stand down so she doesn’t get four phone
+            calls in ninety seconds.</p>
+          <p>Only one of you needs to subscribe for her to be covered.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can I follow both of my parents?</summary>
+        <div class="faq-body">
+          <p>Yes — one subscription covers everyone you look after, however many
+            that is. You’ll see each of them on one screen with the time they
+            checked in.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Is it an emergency alarm? Does it call 911?</summary>
+        <div class="faq-body">
+          <p>No. Pruuf notifies the family members who have been added, and
+            nobody else. It does not contact emergency services, an ambulance
+            service, or a monitoring centre, and we would rather be clear about
+            that than sell you something on a misunderstanding.</p>
+          <p>If someone needs help right now, call your local emergency number.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What do you store about us?</summary>
+        <div class="faq-body">
+          <p>A first name, a check-in time, which people are connected to which,
+            and the times check-ins happened. That is close to all of it. There
+            are no passwords because there are no accounts, there is no location
+            data, and there are no advertising or analytics trackers in the app.</p>
+          <p>You can delete your account and everything in it from inside the
+            app at any time. <a href="privacy.html">The full policy</a> is
+            written in the same plain language as this page.</p>
+        </div>
+      </details>
+      <details>
+        <summary>I run a care agency. Can I use this for our clients?</summary>
+        <div class="faq-body">
+          <p>Yes — there is a version of Pruuf built for organisations, with a
+            dashboard showing every client’s status, alerts routed to your
+            on-call coordinator as well as to the family, and a timestamped
+            record of who was told and when.</p>
+          <p><a class="arrow" href="enterprise.html">See Pruuf for care providers</a></p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     ENTERPRISE STRIP
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section--tight night" style="padding-block:clamp(3rem,5vw,4.5rem)">
+  <div class="wrap">
+    <div class="split" style="align-items:center">
+      <div class="reveal">
+        <p class="eyebrow">For care providers</p>
+        <h2 class="h2">Responsible for a hundred people, not one?</h2>
+      </div>
+      <div class="reveal">
+        <p class="lead" style="margin-bottom:1.5rem">
+          Home care agencies, senior living operators and care networks use
+          Pruuf to put eyes on every client every day — without a single extra
+          visit — and to hold a record of exactly who was told and when.
+        </p>
+        <a class="btn btn--light" href="enterprise.html">See Pruuf for care providers</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FINAL CTA + LAUNCH SIGNUP
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="launch">
+  <div class="wrap" style="max-width:44rem">
+    <div class="center reveal">
+      <p class="eyebrow" style="justify-content:center">Nearly there</p>
+      <h2 class="h1">Be told the day it’s out.</h2>
+      <p class="lead" style="margin-top:1rem">
+        Pruuf is in final review with Apple. Leave your email and you’ll get one
+        message — a link to the app on the day it goes live. Nothing else, ever,
+        and it’s one click to be gone.
+      </p>
+    </div>
+
+    <div class="card reveal" style="margin-top:2.5rem">
+      <form data-contact-form novalidate>
+        <input type="hidden" name="intent" value="launch">
+        <div class="hp" aria-hidden="true">
+          <label for="hp-launch">Website</label>
+          <input id="hp-launch" type="text" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <div data-form-status class="form-status" hidden role="alert"></div>
+        <div class="field" style="margin-bottom:1rem">
+          <label for="launch-email">Your email</label>
+          <input class="input" id="launch-email" type="email" name="email"
+                 autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <button class="btn btn--ok" type="submit" style="width:100%">Tell me when it launches</button>
+        <p class="small muted" style="margin:1rem 0 0;text-align:center">
+          One email. No newsletter, no sequence, no sharing your address with anybody.
+        </p>
+      </form>
+      <div data-form-done hidden tabindex="-1">
+        <span class="chip">Got it</span>
+        <h3 class="h3" style="margin-top:1rem">You’re on the list.</h3>
+        <p class="muted mb-0" style="margin-top:.5rem">
+          We’ll email you once, on the day Pruuf is available, and that will be
+          the only time you hear from us. Thank you for being early.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <a class="brand" href="index.html" style="margin-bottom:1rem">
+          <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 21s-7.5-4.7-7.5-10A4.5 4.5 0 0 1 12 8.5 4.5 4.5 0 0 1 19.5 11c0 5.3-7.5 10-7.5 10Z" fill="#fff"/>
+            <path d="M8.8 12.4l2.3 2.3 4.3-4.6" stroke="#0B7A45" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg></span>Pruuf
+        </a>
+        <p class="small" style="max-width:19rem">
+          A daily check-in for the people you love. Made by The ScoutsOn Watch
+          Company.
+        </p>
+      </div>
+      <div>
+        <h4>Pruuf</h4>
+        <ul>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="index.html#faq">Questions</a></li>
+          <li><a href="enterprise.html">For care providers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="contact.html">Contact us</a></li>
+          <li><a href="support.html">Support</a></li>
+          <li><a href="enterprise.html#contact">Talk to sales</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy.html">Privacy policy</a></li>
+          <li><a href="terms.html">Terms of use</a></li>
+          <li><a href="terms.html#pricing">Pricing promise</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© <span data-year>2026</span> The ScoutsOn Watch Company. All rights reserved.</span>
+      <span>Pruuf notifies the family members you add. It is not an emergency service.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
