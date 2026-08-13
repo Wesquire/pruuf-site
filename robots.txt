@@ -1,0 +1,15 @@
+# thepruuf.com
+#
+# Everything here is public and meant to be found. The only exclusions are the
+# tooling that ships alongside the pages and the embedded dashboard, which is a
+# demo with a fabricated roster — indexed, it would turn up in search for the
+# names in its fixtures and read as a real care agency's client list.
+
+User-agent: *
+Allow: /
+
+Disallow: /dashboard/
+Disallow: /*.py$
+Disallow: /404.html
+
+Sitemap: https://thepruuf.com/sitemap.xml

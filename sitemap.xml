@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Every indexable page, once, at its canonical URL.
+
+  No <lastmod>, <changefreq> or <priority>. Google ignores the last two, and a
+  <lastmod> that is not maintained is worse than absent — it teaches crawlers
+  that the dates here are noise. If this ever needs date hints, generate them
+  from git rather than typing them.
+
+  404.html is deliberately absent: it carries `robots: noindex`, and listing a
+  page you have asked not to be indexed is a contradiction crawlers report.
+
+  `check.py` fails if a page exists that is not listed here, so this cannot
+  quietly fall behind the site.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://thepruuf.com/</loc></url>
+  <url><loc>https://thepruuf.com/enterprise.html</loc></url>
+  <url><loc>https://thepruuf.com/contact.html</loc></url>
+  <url><loc>https://thepruuf.com/support.html</loc></url>
+  <url><loc>https://thepruuf.com/privacy.html</loc></url>
+  <url><loc>https://thepruuf.com/terms.html</loc></url>
+</urlset>

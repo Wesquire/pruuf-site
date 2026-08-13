@@ -8,9 +8,10 @@ editable in five years.
 Follow this once and you have a live site on your own domain. It takes about
 half an hour, most of which is waiting for DNS.
 
-**Placeholder used throughout:** `thepruuf.com`. Replace it with whatever domain
-you actually own, everywhere it appears — including in the two code changes in
-Step 5.
+**The domain is `thepruuf.com`.** It is written down in exactly one place —
+`SITE` at the top of `check.py` — and `check.py` fails on any page, sitemap
+entry or robots line that disagrees with it. To move domains, change that
+constant and let the failures list every file that still needs editing.
 
 ---
 
@@ -81,7 +82,7 @@ Any of these serve this folder correctly. Pick one; do not do two.
 
 | | Best for | Cost | Custom domain |
 |---|---|---|---|
-| **Cloudflare Pages** | *Recommended.* Fastest, free TLS, instant rollbacks, no repo required | Free | Yes |
+| **Cloudflare Pages** | **What thepruuf.com uses.** Fastest, free TLS, instant rollbacks, per-branch preview URLs | Free | Yes |
 | **Netlify** | Drag-and-drop with no git at all | Free tier | Yes |
 | **GitHub Pages** | You already have `Wesquire/pruuf-site` | Free | Yes |
 
@@ -110,6 +111,14 @@ which is the cheapest insurance there is.
 3. Later updates: the same drop page, signed in, on the same site.
 
 ### 3C — GitHub Pages
+
+> **An alternative, not an addition.** thepruuf.com is served by Cloudflare
+> Pages (3A). If GitHub Pages is *also* switched on for this repo, the same
+> site is live at two addresses — which splits search ranking between them and
+> means the contact form silently fails on one, because the origin allowlist
+> only admits thepruuf.com. Every page's canonical tag already points at
+> thepruuf.com, so search engines are told which one is real; but if Pages is
+> on and you are not using it, turn it off.
 
 You already have a public repo for this: `Wesquire/pruuf-site` (this folder is
 itself a checkout of it — `git remote -v` inside `site/` shows it).
