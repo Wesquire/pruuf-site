@@ -6,7 +6,9 @@ files onto a static host — **[DEPLOY.md](DEPLOY.md) walks that through from
 buying a domain to reading the messages people send you.**
 
 The design brief, the copy strategy and the reasoning behind both are in
-[`../WEBSITE.md`](../WEBSITE.md).
+[`../WEBSITE.md`](../WEBSITE.md). Running the forms afterwards — reading and
+deleting enquiries, changing where the notification email goes and what it says,
+and the release-day switch — is [EMAIL-AND-FORMS.md](EMAIL-AND-FORMS.md).
 
 ## The pages
 

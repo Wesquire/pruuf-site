@@ -270,6 +270,11 @@ delete from public.contact_requests where id = '…';
 
 ## Getting the messages by email
 
+> Day-to-day operation of both forms — reading, exporting and deleting
+> enquiries, changing the notification address or wording, sending from
+> `hello@thepruuf.com`, and the release-day switch — lives in
+> **[EMAIL-AND-FORMS.md](EMAIL-AND-FORMS.md)**. What follows is first-time setup.
+
 The endpoint will email you every enquiry the moment it arrives — it just needs
 an email provider, because Supabase has no mail sending of its own. **Two
 secrets and you are done.** With them unset nothing breaks; the row is still

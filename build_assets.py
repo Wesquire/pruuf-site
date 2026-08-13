@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 """Turn the marketing renders into web-weight assets.
 
-Sources are `AppStore/screenshots/rounded/` — the screen with Apple's true
-display corner radius and a transparent outside, and no device body.
+Sources are `AppStore/screenshots/framed-web/` — the real device, drawn to
+Apple's own geometry, on transparency and cropped to the hardware. Produced by
+`python3 AppStore/frame_devices.py --web`.
 
-They were `marketing/devices/` first, which draws the whole handset: metal rail,
-bezel, Dynamic Island, watch band. That is right for a hero image and wrong
-everywhere this site uses one. At the sizes a web page actually shows a phone,
-the black slab is most of the picture and the app is a postage stamp inside it —
-so the section that is supposed to say "look how simple this screen is" said
-"look, a phone". The device body is also the same in all eight, which means
-eight images that mostly repeat.
+This pointed at the bodiless `rounded/` screens for a while, on the reasoning
+that at web sizes the black slab is most of the picture. That reasoning was
+sound and the result was still wrong: without the hardware, each image is a
+coloured rectangle that could be anything, and a page whose whole argument is
+"this product was considered" cannot afford to look unfinished. The frame is
+what makes it read as a real thing on a real phone.
+
+What it must NOT be is the App Store framing, which draws the device on an
+opaque cream canvas at an exact required size. On a web page that canvas is a
+pale box fighting whatever section it sits in. The `--web` mode is the same
+geometry with the backdrop removed and the shadow kept.
 
 They are still 1242–2752px and ~1MB each, so shipping them untouched would make
 the landing page several megabytes, which on the 4G connection of somebody's
@@ -41,7 +46,7 @@ OUT = os.path.join(ROOT, "site", "assets", "img")
 # Widths are 2x the largest CSS size the asset is ever displayed at, which is
 # the point past which a retina screen cannot tell the difference. Nothing here
 # is displayed above ~600px CSS, so nothing needs to be above ~1200px.
-SHOTS = "AppStore/screenshots/rounded"
+SHOTS = "AppStore/screenshots/framed-web"
 
 JOBS = [
     # The iPad, running THE APP.
@@ -58,8 +63,9 @@ JOBS = [
     (f"{SHOTS}/iphone-6.5/06-family-sees-status.png", "iphone-family",   620),
     (f"{SHOTS}/iphone-6.5/07-your-people.png",        "iphone-people",   620),
 
-    # The watch. Ultra 3 is the largest and the best looking.
-    (f"{SHOTS}/watch/ultra-3-422x514/02-one-tap-check-in.png", "watch-checkin", 422),
+    # The watch. Ultra 3 is the largest and the best looking. Wider than the
+    # screen it wraps, because the case and crown are now part of the picture.
+    (f"{SHOTS}/watch/ultra-3-422x514/02-one-tap-check-in.png", "watch-checkin", 470),
 
     # Brand marks.
     ("AppStore/icon/logo-transparent-1024.png", "logo",     512),
@@ -180,12 +186,50 @@ def prune():
             print(f"  {'removed':<20} {name}")
 
 
+def resize_html():
+    """Rewrite the width/height attributes in the pages to what was emitted.
+
+    These are not decoration. A browser uses them to reserve the right box
+    before the image arrives, so a wrong pair either shifts the whole page as it
+    loads or — when a stylesheet sets `max-width` without `height: auto` —
+    stretches the picture to a shape it never had. Both have happened here: the
+    device shots once rendered 4.6x too tall for exactly that reason.
+
+    Kept in the build rather than in a checklist because the numbers change
+    every time the source geometry does, and a number a human has to remember to
+    update is a number that is wrong by the third time.
+    """
+    import re
+    pages = [os.path.join(ROOT, "site", f)
+             for f in os.listdir(os.path.join(ROOT, "site")) if f.endswith(".html")]
+    fixed = 0
+    for page in pages:
+        with open(page) as fh:
+            text = fh.read()
+        before = text
+        for _, stem, _ in JOBS:
+            out = os.path.join(OUT, f"{stem}.png")
+            if not os.path.exists(out):
+                continue
+            w, h = Image.open(out).size
+            text = re.sub(
+                rf'(src="assets/img/{re.escape(stem)}\.png"\s+width=")\d+("\s+height=")\d+"',
+                rf'\g<1>{w}\g<2>{h}"', text)
+        if text != before:
+            with open(page, "w") as fh:
+                fh.write(text)
+            fixed += 1
+            print(f"  {'sized':<20} {os.path.basename(page)}")
+    return fixed
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     print(f"→ {os.path.relpath(OUT, ROOT)}")
     ok = all([emit(*j) for j in JOBS])
     brand_furniture()
     prune()
+    resize_html()
 
     total = sum(os.path.getsize(os.path.join(OUT, f))
                 for f in os.listdir(OUT) if f.endswith(".webp"))
