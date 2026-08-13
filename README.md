@@ -68,12 +68,20 @@ landing page becomes a picture of an app that no longer exists.
 ## After the app changes
 
 ```bash
-AppStore/capture.sh ios            # re-capture from the current app
-python3 marketing/render_devices.py   # transparent framed renders
-python3 site/build_assets.py          # web-weight copies for the site
+AppStore/capture.sh ios              # re-capture from the current app
+python3 AppStore/frame_devices.py    # App Store frames (opaque, exact canvas)
+python3 AppStore/round_devices.py    # ← what the WEBSITE uses. Do not skip.
+python3 marketing/render_devices.py  # transparent framed renders
+python3 site/build_assets.py         # web-weight copies for the site
 cp portal/index.html site/dashboard/index.html   # if the dashboard changed
 python3 site/check.py
 ```
+
+**`round_devices.py` is the easy one to forget**, and forgetting it is silent:
+the framed App Store set updates, the site keeps serving the previous build's
+screens, and everything reports success. It happened once already — the site
+showed an older version of the app for a full pipeline run before anybody
+looked at the picture.
 
 ## Commits push themselves
 

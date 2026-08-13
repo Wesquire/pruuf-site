@@ -183,7 +183,7 @@ function initHeroDemo() {
     caption.textContent = 'Tap I’M OK — and watch this phone.';
     feed.innerHTML = `<p class="small muted mb-0" style="padding:.5rem 0">
         Margaret’s daughter, two states away. Her phone is quiet.</p>`;
-    screen.innerHTML = chrome('Check in by 10:00 AM') + `
+    screen.innerHTML = chrome('Check in by 10:00 AM · 1h 56m left') + `
       <button class="app-big is-inviting" type="button" id="demo-imok">
         <span class="app-big-title">I'M OK</span>
         <span class="app-big-sub">Tap to tell your loved ones</span>
@@ -195,13 +195,16 @@ function initHeroDemo() {
   function sceneCheckedIn() {
     clear();
     caption.textContent = 'That’s the whole app. Every day, one tap.';
-    screen.innerHTML = chrome('Check in by 10:00 AM', 'DONE TODAY') + `
-      <div class="app-big app-big--done fade-swap">
+    // Still a button, and still tappable — checking in again is the point.
+    screen.innerHTML = chrome('Next check-in tomorrow at 10:00 AM', 'DONE TODAY') + `
+      <button class="app-big app-big--done fade-swap" type="button" id="demo-imok">
         <span class="app-tick">${ICON.check}</span>
         <span class="app-big-title app-big-title--small">Thanks for<br>checking in</span>
         <span class="app-big-sub app-big-sub--strong">
           Your next check-in is tomorrow at 10:00 AM.</span>
-      </div>` + footer();
+        <span class="app-big-sub" style="opacity:.8;font-size:calc(var(--w) * .042)">
+          Checked in at 8:04 AM · tap to say so again</span>
+      </button>` + footer();
     wire();
 
     after(320, () => {
@@ -220,7 +223,7 @@ function initHeroDemo() {
     caption.textContent = 'This part runs on our servers — not on her phone.';
     feed.innerHTML = `<p class="small muted mb-0" style="padding:.5rem 0">
         10:00 AM. Nothing has been tapped.</p>`;
-    screen.innerHTML = chrome('Check in by 10:00 AM') + `
+    screen.innerHTML = chrome('Check in by 10:00 AM · 15m late') + `
       <div class="app-big" style="opacity:.4">
         <span class="app-big-title">I'M OK</span>
         <span class="app-big-sub">Tap to tell your loved ones</span>
@@ -259,7 +262,7 @@ function initHeroDemo() {
   function sceneHelp() {
     clear();
     caption.textContent = 'Tapped by mistake? Cancel it and nobody is told a thing.';
-    screen.innerHTML = chrome('Check in by 10:00 AM') + `
+    screen.innerHTML = chrome('Check in by 10:00 AM · 1h 56m left') + `
       <div class="app-big app-big--help fade-swap">
         <span class="app-tick">${ICON.bellBig}</span>
         <span class="app-big-title app-big-title--small">Your loved ones<br>have been told</span>
@@ -282,7 +285,10 @@ function initHeroDemo() {
    *  so a new scene cannot forget one and leave a dead button in the demo. */
   function wire() {
     const ok = $('#demo-imok', screen);
-    if (ok) ok.addEventListener('click', sceneCheckedIn);
+    if (ok) ok.addEventListener('click', () => {
+      caption.textContent = 'Checked in again — they’ll be told each time.';
+      sceneCheckedIn();
+    });
     const help = $('#demo-help', screen);
     if (help && !help.disabled) help.addEventListener('click', sceneHelp);
     const loved = $('#demo-loved', screen);
