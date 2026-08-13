@@ -75,6 +75,21 @@ cp portal/index.html site/dashboard/index.html   # if the dashboard changed
 python3 site/check.py
 ```
 
+## Commits push themselves
+
+`scripts/install-hooks.sh` in the app repo installs a `post-commit` hook here
+that runs `check.py` and, **only if it passes**, pushes — which Cloudflare Pages
+turns into a deployment. A commit that would break the live site is committed
+locally and simply not sent, with the failures printed.
+
+Run the installer once per clone; `.git/hooks/` is not version-controlled and
+does not survive a fresh clone.
+
+```bash
+scripts/install-hooks.sh     # from the app repo root
+git commit --no-verify       # to skip the hook for one commit
+```
+
 ## Git
 
 This folder is its own repository — `Wesquire/pruuf-site`, public — because

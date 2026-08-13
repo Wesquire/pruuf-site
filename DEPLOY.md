@@ -314,6 +314,16 @@ seeing a cached or authenticated version.
 
 ---
 
+## Commits deploy themselves
+
+After `scripts/install-hooks.sh` has been run once, every commit in `site/`
+runs `check.py` and pushes if it passes — and a push to `main` is a deployment.
+So the loop is just: edit, commit. A commit that fails the checks stays local
+and tells you why, so a broken site cannot reach the domain by accident.
+
+Nothing gates the *app* repo's hook, because nothing deploys from it and gating
+a commit on a ten-minute test battery is a hook nobody keeps.
+
 ## Updating the site later
 
 | What changed | What to do |
