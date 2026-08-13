@@ -595,9 +595,47 @@ a:hover { color: var(--ink); }
 .fade-swap { animation: fadeSwap .4s var(--ease) both; }
 @keyframes fadeSwap { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-/* ── Device photography ────────────────────────────────────────────── */
-.device-img { filter: drop-shadow(0 40px 60px rgba(22,21,15,.28)); }
-.night .device-img { filter: drop-shadow(0 40px 70px rgba(0,0,0,.7)); }
+/* ── Device photography ────────────────────────────────────────────────
+   These are the SCREEN, at Apple's real display corner radius, with no
+   handset drawn around them — see AppStore/round_devices.py. A drawn body
+   was most of the picture at the sizes this page uses, and identical in
+   every shot, so eight screenshots looked like eight photographs of the
+   same phone.
+
+   Without a body the shadow now traces the screen's own silhouette, which
+   is the effect worth having. Two layers: a tight one that reads as the
+   glass sitting slightly proud of the page, and a wide soft one for depth.
+   Softer than the framed version used, or it reads as a sticker. */
+.device-img {
+  filter:
+    drop-shadow(0 1px 1px rgba(22,21,15,.10))
+    drop-shadow(0 2px 8px rgba(22,21,15,.07))
+    drop-shadow(0 28px 44px rgba(22,21,15,.17));
+}
+.night .device-img {
+  filter:
+    drop-shadow(0 1px 2px rgba(0,0,0,.5))
+    drop-shadow(0 30px 55px rgba(0,0,0,.6));
+}
+
+/* The three-device row. Bottom-aligned so the screens sit on one shelf, with
+   the label under each — see the note in index.html about why the labels are
+   doing work that a drawn handset used to do. Widths are chosen for visual
+   balance rather than true physical scale: an iPad really is 2.8x the width of
+   an iPhone, and at that ratio the phone becomes a thumbnail. */
+.device-row {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: clamp(1.25rem, 4vw, 3.5rem); flex-wrap: wrap;
+}
+.device-row figure { margin: 0; text-align: center; }
+.device-row img { margin-inline: auto; }
+.device-row figcaption {
+  margin-top: 1.1rem; font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted);
+}
+.device-row figure:nth-child(1) img { max-width: 210px; }
+.device-row figure:nth-child(2) img { max-width: 330px; }
+.device-row figure:nth-child(3) img { max-width: 190px; }
 
 /* ── Numbered steps ────────────────────────────────────────────────── */
 /* Quiet, but still perceivable. At `--hairline-strong` these measured 1.48:1

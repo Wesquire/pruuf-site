@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pruuf — One tap. And everyone stops worrying.</title>
 <meta name="description" content="Pruuf is a daily check-in for the people you love. One tap says “I’m OK.” If the tap doesn’t come, the family is told automatically — from our servers, not from the phone.">
-<link rel="canonical" href="https://pruuf.app/">
+<link rel="canonical" href="https://thepruuf.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pruuf — One tap. And everyone stops worrying.">
 <meta property="og:description" content="A daily check-in for the people you love. One tap says “I’m OK.” If it doesn’t come, the family is told.">
-<meta property="og:image" content="https://pruuf.app/assets/img/og-card.png">
-<meta property="og:url" content="https://pruuf.app/">
+<meta property="og:image" content="https://thepruuf.com/assets/img/og-card.png">
+<meta property="og:url" content="https://thepruuf.com/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FBFAF7">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -196,7 +196,7 @@
         </div>
         <picture>
           <source srcset="assets/img/iphone-checkin.webp" type="image/webp">
-          <img class="device-img" src="assets/img/iphone-checkin.png" width="620" height="1122"
+          <img class="device-img" src="assets/img/iphone-checkin.png" width="620" height="1342"
                style="max-width:290px;margin-inline:auto"
                alt="The Pruuf check-in screen on an iPhone: a large green I’M OK button filling most of the display.">
         </picture>
@@ -218,7 +218,7 @@
         </div>
         <picture>
           <source srcset="assets/img/iphone-family.webp" type="image/webp">
-          <img class="device-img" src="assets/img/iphone-family.png" width="620" height="1122"
+          <img class="device-img" src="assets/img/iphone-family.png" width="620" height="1342"
                style="max-width:290px;margin-inline:auto"
                alt="The family view on an iPhone, showing one person checked in and one who has not.">
         </picture>
@@ -279,7 +279,7 @@
     <div class="split split--wide-left reveal" style="margin-top:clamp(3rem,6vw,5rem)">
       <picture>
         <source srcset="assets/img/iphone-people.webp" type="image/webp">
-        <img class="device-img" src="assets/img/iphone-people.png" width="620" height="1122"
+        <img class="device-img" src="assets/img/iphone-people.png" width="620" height="1342"
              style="max-width:280px;margin-inline:auto"
              alt="The My Loved Ones screen, showing the six-character invite code and who is connected.">
       </picture>
@@ -355,23 +355,37 @@
       </p>
     </div>
 
-    <div class="reveal" style="display:flex;align-items:flex-end;justify-content:center;
-                               gap:clamp(1rem,4vw,3.5rem);flex-wrap:wrap">
-      <picture>
-        <source srcset="assets/img/iphone-done.webp" type="image/webp">
-        <img class="device-img" src="assets/img/iphone-done.png" width="620" height="1122"
-             style="max-width:220px" alt="Pruuf on iPhone, showing the confirmation after checking in.">
-      </picture>
-      <picture>
-        <source srcset="assets/img/ipad-app.webp" type="image/webp">
-        <img class="device-img" src="assets/img/ipad-app.png" width="760" height="941"
-             style="max-width:340px" alt="Pruuf on an iPad, showing the same check-in screen at tablet size.">
-      </picture>
-      <picture>
-        <source srcset="assets/img/watch-checkin.webp" type="image/webp">
-        <img class="device-img" src="assets/img/watch-checkin.png" width="420" height="952"
-             style="max-width:150px" alt="Pruuf on an Apple Watch, showing the check-in button on the wrist.">
-      </picture>
+    <!-- Labelled, because the device body used to do this job.
+         These are the screens alone now (AppStore/round_devices.py), which is
+         right everywhere else on the page — but this section's entire point is
+         "three different devices", and stripped of their bodies an iPad reads
+         as a wide phone and a watch reads as a small one. The identity moves
+         from chrome to type, which suits this site better anyway. -->
+    <div class="reveal device-row">
+      <figure>
+        <picture>
+          <source srcset="assets/img/iphone-done.webp" type="image/webp">
+          <img class="device-img" src="assets/img/iphone-done.png" width="620" height="1342"
+               alt="Pruuf on iPhone, showing the confirmation after checking in.">
+        </picture>
+        <figcaption>iPhone</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source srcset="assets/img/ipad-app.webp" type="image/webp">
+          <img class="device-img" src="assets/img/ipad-app.png" width="700" height="933"
+               alt="Pruuf on an iPad, showing the same check-in screen at tablet size.">
+        </picture>
+        <figcaption>iPad</figcaption>
+      </figure>
+      <figure>
+        <picture>
+          <source srcset="assets/img/watch-checkin.webp" type="image/webp">
+          <img class="device-img" src="assets/img/watch-checkin.png" width="422" height="514"
+               alt="Pruuf on an Apple Watch, showing the check-in button on the wrist.">
+        </picture>
+        <figcaption>Apple Watch</figcaption>
+      </figure>
     </div>
   </div>
 </section>

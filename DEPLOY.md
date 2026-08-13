@@ -8,7 +8,7 @@ editable in five years.
 Follow this once and you have a live site on your own domain. It takes about
 half an hour, most of which is waiting for DNS.
 
-**Placeholder used throughout:** `pruuf.app`. Replace it with whatever domain
+**Placeholder used throughout:** `thepruuf.com`. Replace it with whatever domain
 you actually own, everywhere it appears — including in the two code changes in
 Step 5.
 
@@ -65,7 +65,7 @@ Any registrar. **Cloudflare Registrar** and **Namecheap** are both fine;
 Cloudflare sells at cost and does not raise the price in year two, which most
 registrars do.
 
-Buy the apex — `pruuf.app`, not `www.pruuf.app`. You will point both at the
+Buy the apex — `thepruuf.com`, not `www.thepruuf.com`. You will point both at the
 site in Step 4.
 
 > `.app` is a Google-operated TLD on the HSTS preload list, which means browsers
@@ -93,9 +93,9 @@ Any of these serve this folder correctly. Pick one; do not do two.
 3. Drag the **contents** of the `site` folder in — the files themselves, not the
    folder. `index.html` must end up at the top level.
 4. **Deploy.** You get `pruuf.pages.dev` immediately. Check it works.
-5. **Custom domains** → **Set up a domain** → `pruuf.app`. If the domain is
+5. **Custom domains** → **Set up a domain** → `thepruuf.com`. If the domain is
    registered at Cloudflare, DNS is written for you and there is nothing to do
-   in Step 4. Repeat for `www.pruuf.app`.
+   in Step 4. Repeat for `www.thepruuf.com`.
 
 To update later: same screen, **Create new deployment**, drag the folder again.
 Every deployment is kept and any of them can be made live again with one click,
@@ -106,7 +106,7 @@ which is the cheapest insurance there is.
 1. <https://app.netlify.com/drop> — drag the `site` folder onto the page. It is
    live in seconds at a random `*.netlify.app` address.
 2. **Site configuration → Domain management → Add a custom domain** →
-   `pruuf.app`, and follow Step 4.
+   `thepruuf.com`, and follow Step 4.
 3. Later updates: the same drop page, signed in, on the same site.
 
 ### 3C — GitHub Pages
@@ -125,7 +125,7 @@ Then in that repo on github.com: **Settings → Pages → Source: Deploy from a
 branch → `main` / `/ (root)` → Save.** A minute later it is at
 `https://wesquire.github.io/pruuf-site/`.
 
-For the custom domain: **Settings → Pages → Custom domain** → `pruuf.app` →
+For the custom domain: **Settings → Pages → Custom domain** → `thepruuf.com` →
 Save, tick **Enforce HTTPS** once it becomes available (a few minutes), then
 follow Step 4. GitHub writes a `CNAME` file into the repo when you do this;
 leave it there.
@@ -167,10 +167,10 @@ the A records the host gives you, or move DNS to Cloudflare, which supports it.
 DNS usually propagates in minutes and is allowed up to 48 hours. Check with:
 
 ```bash
-dig +short pruuf.app
+dig +short thepruuf.com
 ```
 
-Then load `https://pruuf.app` and confirm the padlock. **Do not skip the
+Then load `https://thepruuf.com` and confirm the padlock. **Do not skip the
 padlock check** — an unencrypted contact form on a page about somebody's elderly
 mother is not acceptable, and the browser will refuse `.app` over HTTP anyway.
 
@@ -187,7 +187,7 @@ fail.
 
 ```bash
 npx supabase secrets set \
-  CONTACT_ALLOWED_ORIGINS="https://pruuf.app,https://www.pruuf.app"
+  CONTACT_ALLOWED_ORIGINS="https://thepruuf.com,https://www.thepruuf.com"
 npx supabase functions deploy contact --no-verify-jwt
 ```
 
@@ -203,17 +203,17 @@ npx supabase secrets set CONTACT_IP_PEPPER="$(openssl rand -hex 32)"
 npx supabase functions deploy contact --no-verify-jwt
 ```
 
-**5C. Update the canonical URLs** if your domain is not `pruuf.app`. They are
+**5C. Update the canonical URLs** if your domain is not `thepruuf.com`. They are
 declarations of where each page lives, used by search engines and by link
 previews:
 
 ```bash
 cd site
-grep -rl "pruuf.app" *.html _shell.py | xargs sed -i '' 's|pruuf\.app|yourdomain.com|g'
+grep -rl "thepruuf.com" *.html _shell.py | xargs sed -i '' 's|pruuf\.app|yourdomain.com|g'
 python3 check.py
 ```
 
-**5D. Prove it works from the real domain.** Open `https://pruuf.app/contact.html`,
+**5D. Prove it works from the real domain.** Open `https://thepruuf.com/contact.html`,
 send yourself a message, and confirm you get the "Thank you — we have it."
 panel rather than the fallback. Then read it back:
 
@@ -285,9 +285,9 @@ You promised them exactly one email. Send exactly one.
 
 App Store Connect → your app → **App Information**:
 
-- **Privacy Policy URL:** `https://pruuf.app/privacy.html`
-- **Support URL:** `https://pruuf.app/support.html`
-- **Marketing URL:** `https://pruuf.app` *(optional, but now worth having)*
+- **Privacy Policy URL:** `https://thepruuf.com/privacy.html`
+- **Support URL:** `https://thepruuf.com/support.html`
+- **Marketing URL:** `https://thepruuf.com` *(optional, but now worth having)*
 
 Both required URLs must be publicly reachable before Apple will accept the
 submission. Load them in a private browsing window to be sure you are not
@@ -322,10 +322,10 @@ allowlist — redo Step 5A with your exact domain, including `https://` and
 without a trailing slash. Confirm with:
 
 ```bash
-curl -i -X OPTIONS https://taszjafyqcilujpygtbs.supabase.co/functions/v1/contact -H "Origin: https://pruuf.app"
+curl -i -X OPTIONS https://taszjafyqcilujpygtbs.supabase.co/functions/v1/contact -H "Origin: https://thepruuf.com"
 ```
 
-You want `access-control-allow-origin: https://pruuf.app` in the response. If it
+You want `access-control-allow-origin: https://thepruuf.com` in the response. If it
 says `null`, the secret has not taken effect — redeploy the function.
 
 **The dashboard on the enterprise page is blank.** The `dashboard/` folder did
@@ -336,7 +336,7 @@ itself was dragged instead of its contents, putting everything one level too
 deep.
 
 **The favicon is the old one.** Browsers cache favicons aggressively and ignore
-normal refreshes. Load `https://pruuf.app/favicon.ico` directly once.
+normal refreshes. Load `https://thepruuf.com/favicon.ico` directly once.
 
 **Changes are not showing up.** Hard-reload (⌘⇧R). If you are on Cloudflare,
 **Caching → Purge Everything** once.

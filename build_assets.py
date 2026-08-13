@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 """Turn the marketing renders into web-weight assets.
 
-The renders in ../marketing are made for App Store submission and for print-
-sized hero art: 1600–2400px wide, transparent, and 0.5MB each. Shipping them
-untouched would make the landing page ~4MB, which on the 4G connection of
-somebody's mother is thirty seconds of white screen — and this site's entire
-argument is that we are the calm, considered option.
+Sources are `AppStore/screenshots/rounded/` — the screen with Apple's true
+display corner radius and a transparent outside, and no device body.
+
+They were `marketing/devices/` first, which draws the whole handset: metal rail,
+bezel, Dynamic Island, watch band. That is right for a hero image and wrong
+everywhere this site uses one. At the sizes a web page actually shows a phone,
+the black slab is most of the picture and the app is a postage stamp inside it —
+so the section that is supposed to say "look how simple this screen is" said
+"look, a phone". The device body is also the same in all eight, which means
+eight images that mostly repeat.
+
+They are still 1242–2752px and ~1MB each, so shipping them untouched would make
+the landing page several megabytes, which on the 4G connection of somebody's
+mother is thirty seconds of white screen — and this site's entire argument is
+that we are the calm, considered option.
 
 Each source produces two files:
 
@@ -31,26 +41,25 @@ OUT = os.path.join(ROOT, "site", "assets", "img")
 # Widths are 2x the largest CSS size the asset is ever displayed at, which is
 # the point past which a retina screen cannot tell the difference. Nothing here
 # is displayed above ~600px CSS, so nothing needs to be above ~1200px.
+SHOTS = "AppStore/screenshots/rounded"
+
 JOBS = [
     # The iPad, running THE APP.
     #
     # This started out pointing at marketing/hero/hero-ipad-portrait.png, which
     # is a render of the provider DASHBOARD on an iPad. It went into the
     # consumer "whichever one is nearest" row, so a section about one family
-    # showed a care agency's client roster. The two iPad renders and the
-    # MacBook one are all dashboard art, and the enterprise page now embeds the
-    # real dashboard live rather than showing a picture of it — so none of them
-    # are needed here.
-    ("marketing/devices/ipad-13/03-one-tap-check-in.png", "ipad-app", 760),
+    # showed a care agency's client roster.
+    (f"{SHOTS}/ipad-13/03-one-tap-check-in.png", "ipad-app", 700),
 
     # The phone. Four of the eight screens tell the whole story.
-    ("marketing/devices/iphone-6.5/03-one-tap-check-in.png",  "iphone-checkin",  620),
-    ("marketing/devices/iphone-6.5/04-done-for-the-day.png",  "iphone-done",     620),
-    ("marketing/devices/iphone-6.5/06-family-sees-status.png","iphone-family",   620),
-    ("marketing/devices/iphone-6.5/07-your-people.png",       "iphone-people",   620),
+    (f"{SHOTS}/iphone-6.5/03-one-tap-check-in.png",   "iphone-checkin",  620),
+    (f"{SHOTS}/iphone-6.5/04-done-for-the-day.png",   "iphone-done",     620),
+    (f"{SHOTS}/iphone-6.5/06-family-sees-status.png", "iphone-family",   620),
+    (f"{SHOTS}/iphone-6.5/07-your-people.png",        "iphone-people",   620),
 
-    # The watch, on the wrist. Ultra 3 is the largest and the best looking.
-    ("marketing/devices/watch/ultra-3-422x514/02-one-tap-check-in.png", "watch-checkin", 420),
+    # The watch. Ultra 3 is the largest and the best looking.
+    (f"{SHOTS}/watch/ultra-3-422x514/02-one-tap-check-in.png", "watch-checkin", 422),
 
     # Brand marks.
     ("AppStore/icon/logo-transparent-1024.png", "logo",     512),
