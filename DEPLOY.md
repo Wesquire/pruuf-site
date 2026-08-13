@@ -192,7 +192,10 @@ from origins it recognises. Until you do this, the form on your live domain will
 fail — gracefully, offering the visitor a pre-written email instead, but it will
 fail.
 
-**5A. Add the origin to the allowlist:**
+**Already done** for thepruuf.com — this section is the record of what was set
+and how to change it.
+
+**5A. The origin allowlist:**
 
 ```bash
 npx supabase secrets set \
@@ -201,8 +204,15 @@ npx supabase functions deploy contact --no-verify-jwt
 ```
 
 Setting this secret **replaces** the built-in list rather than adding to it, so
-include every origin you want, and add `http://localhost:8000` back if you still
-want the form to work while developing.
+include every origin you want, and keep `http://localhost:8000` if you want the
+form to work while developing.
+
+**No `*.pages.dev` entry, and no wildcard.** A Cloudflare Pages project name is
+claimed first-come, so listing one before creating it would let whoever claims
+it post into the table from a page we do not control. The consequence is that
+branch-preview URLs cannot submit the form — they fall back to the pre-composed
+email. If you want the form working on the `.pages.dev` address, create the
+project first and then add its real hostname here.
 
 **5B. Set a pepper for the IP hashing**, so the rate-limit hashes are not
 derived from the service key:
