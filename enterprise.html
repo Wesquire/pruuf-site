@@ -192,9 +192,9 @@
     </div>
 
     <div class="btn-row btn-row--center" style="margin-top:2.5rem">
-      <a class="btn btn--light" href="dashboard/index.html?auth=1&theme=light#today" target="_blank" rel="noopener">
+      <button class="btn btn--light" type="button" data-open-dashboard>
         Open it full screen
-      </a>
+      </button>
       <a class="btn btn--ghost" href="#contact">Have someone walk you through it</a>
     </div>
 
@@ -582,14 +582,36 @@
               You’ll get a reply within one business day, from a person, with
               times for a walkthrough.
             </p>
-            <p class="mb-0"><a class="arrow" href="dashboard/index.html?auth=1&theme=light#today"
-                               target="_blank" rel="noopener">Have a look around the dashboard meanwhile</a></p>
+            <p class="mb-0"><button class="arrow" type="button" data-open-dashboard
+                    style="background:none;border:0;padding:0;cursor:pointer;color:var(--ok-deep);font:inherit">
+                    Have a look around the dashboard meanwhile</button></p>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Opened by [data-open-dashboard]. The iframe src is set on first open, not
+     here, so the dashboard is not fetched by every visitor who never asks for
+     it — it is a 106KB page and most people will not click. -->
+<div class="modal" id="dashboard-modal" role="dialog" aria-modal="true"
+     aria-labelledby="dashboard-modal-title" hidden>
+  <div class="modal-panel">
+    <div class="modal-bar">
+      <span class="modal-title" id="dashboard-modal-title">The Pruuf provider dashboard</span>
+      <span class="modal-note">Live, with a demonstration roster — click anything</span>
+      <button class="modal-close" type="button" data-close-modal aria-label="Close the dashboard">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <iframe title="The Pruuf provider dashboard, live and interactive" data-src="dashboard/index.html?auth=1&theme=light#today"></iframe>
+    </div>
+  </div>
+</div>
 
 </main>
 

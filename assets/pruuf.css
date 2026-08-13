@@ -97,7 +97,15 @@ body {
   overflow-x: hidden;
 }
 
-img, picture, svg, video { max-width: 100%; display: block; }
+/* `height: auto` is not optional here, it is load-bearing.
+   Every image on this site carries width/height attributes — they reserve the
+   right box before the bytes arrive, which is what stops the page reflowing as
+   it loads. But an explicit `height` attribute keeps applying after CSS
+   narrows the element, so `max-width` alone squeezed the width while the
+   height stayed put: iphone-checkin is 620x1342 shown at 290px wide, so it was
+   rendering 290x1342 — stretched vertically by 4.6x. Every device shot on the
+   site was distorted, on every page. */
+img, picture, svg, video { max-width: 100%; height: auto; display: block; }
 button, input, select, textarea { font: inherit; color: inherit; }
 
 /* Focus. Visible, always — the audience includes keyboard and switch users,
@@ -361,7 +369,18 @@ a:hover { color: var(--ink); }
   .site-nav .btn { margin-top: .9rem; }
 }
 
-.site-footer { background: var(--night); color: var(--on-night-muted); padding-block: clamp(3.5rem,2rem+5vw,5.5rem) 3rem; }
+/* `2rem+5vw` with no spaces is a PARSE ERROR — inside a CSS math function,
+   `+` and `-` require whitespace on both sides. The whole `padding-block`
+   declaration was therefore dropped and the footer had **zero** padding: its
+   content sat hard against the top edge of the dark band, held off the bottom
+   only by `.footer-base`'s own margin. That is the uneven buffer.
+
+   Top and bottom now match at the same value, so the band is evenly weighted
+   whichever end you look at. */
+.site-footer {
+  background: var(--night); color: var(--on-night-muted);
+  padding-block: clamp(3.75rem, calc(2rem + 5vw), 5.5rem);
+}
 .site-footer a { color: var(--on-night-muted); text-decoration: none; }
 .site-footer a:hover { color: var(--on-night); text-decoration: underline; }
 .site-footer h4 {
@@ -439,6 +458,50 @@ a:hover { color: var(--ink); }
   position: absolute; bottom: calc(var(--w) * .022); left: 50%;
   transform: translateX(-50%); width: 36%; height: 3.5px;
   background: rgba(22,21,15,.32); border-radius: 999px; z-index: 4;
+}
+
+/* ── "This is live, touch it" ───────────────────────────────────────────
+   A phone rendered on a web page reads as a screenshot, and nobody taps a
+   screenshot. The demo IS the argument for this product — the whole thing
+   understood in six seconds — so it has to look touchable before anyone will
+   discover that it is.
+
+   A live pip rather than an arrow or a "click here": the pattern people
+   already read as "this is happening now" from status dashboards and live
+   broadcasts, and it does not shout.                                        */
+.demo-invite {
+  display: inline-flex; align-items: center; gap: .55rem; margin: 0;
+  padding: .45rem .95rem .45rem .8rem; border-radius: 999px;
+  background: var(--ok-soft); color: var(--ok-deep);
+  font-size: .8125rem; font-weight: 800; letter-spacing: .02em;
+  border: 1px solid color-mix(in srgb, var(--ok) 22%, transparent);
+}
+.demo-invite-pip {
+  width: .5rem; height: .5rem; border-radius: 50%; background: var(--ok);
+  flex: 0 0 auto; position: relative;
+}
+.demo-invite-pip::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: var(--ok); animation: pip 2s var(--ease) infinite;
+}
+@keyframes pip {
+  0%   { transform: scale(1);   opacity: .6; }
+  70%  { transform: scale(3.2); opacity: 0; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+/* The button itself asks to be pressed, until it has been pressed once. The
+   ring is on box-shadow rather than a pseudo-element because ::before and
+   ::after are already drawing the app's own concentric rings. */
+.app-big.is-inviting { animation: invite 2.6s var(--ease) infinite; }
+@keyframes invite {
+  0%   { box-shadow: 0 14px 30px -16px rgba(22,21,15,.75), 0 0 0 0    rgba(14,138,79,.45); }
+  60%  { box-shadow: 0 14px 30px -16px rgba(22,21,15,.75), 0 0 0 14px rgba(14,138,79,0); }
+  100% { box-shadow: 0 14px 30px -16px rgba(22,21,15,.75), 0 0 0 0    rgba(14,138,79,0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-invite-pip::after, .app-big.is-inviting { animation: none; }
 }
 
 /* ── The watch, same treatment ─────────────────────────────────────── */
@@ -817,6 +880,60 @@ table.data .no  { color: var(--muted); }
 }
 .doc .callout p { color: #7A0B14; margin-bottom: .8em; }
 .doc .callout p:last-child { margin-bottom: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   The dashboard modal
+   ═══════════════════════════════════════════════════════════════════
+   "Open it full screen" used to be a new tab, which is the one thing a page
+   trying to hold somebody should not do: the visitor leaves, explores, and
+   comes back to a tab they have forgotten the context of — or does not come
+   back. The dashboard now opens over the page and closes back onto exactly
+   the spot they left.                                                     */
+.modal {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center; padding: clamp(.75rem, 2vw, 2rem);
+  background: rgba(15, 14, 11, .72);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: modalIn .32s var(--ease) both;
+}
+.modal[hidden] { display: none; }
+@keyframes modalIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-panel {
+  width: min(100%, 84rem); height: min(100%, 52rem);
+  background: var(--surface); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-deep); overflow: hidden;
+  display: flex; flex-direction: column;
+  animation: panelIn .42s var(--ease) both;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+.modal-bar {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .85rem 1rem .85rem 1.35rem;
+  border-bottom: 1px solid var(--hairline); flex: 0 0 auto;
+}
+.modal-title { font-weight: 800; font-size: 1rem; letter-spacing: -.01em; }
+.modal-note { color: var(--muted); font-size: .8125rem; font-weight: 600; }
+.modal-close {
+  margin-left: auto; flex: 0 0 auto;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--hairline-strong); background: var(--surface);
+  cursor: pointer; display: grid; place-items: center;
+  transition: background .2s ease, border-color .2s ease, transform .2s var(--ease);
+}
+.modal-close:hover { background: var(--canvas); border-color: var(--ink); transform: rotate(90deg); }
+.modal-close svg { width: 17px; height: 17px; }
+.modal-body { flex: 1; min-height: 0; }
+.modal-body iframe { width: 100%; height: 100%; border: 0; display: block; background: var(--canvas); }
+
+@media (prefers-reduced-motion: reduce) {
+  .modal, .modal-panel { animation: none; }
+  .modal-close:hover { transform: none; }
+}
 
 /* ── Utilities ─────────────────────────────────────────────────────── */
 .stack > * + * { margin-top: var(--flow, 1.15rem); }

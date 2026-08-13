@@ -266,10 +266,48 @@ is over — the privacy page promises exactly that:
 delete from public.contact_requests where id = '…';
 ```
 
-> **Worth setting up when you have ten minutes:** Supabase can send a webhook on
-> insert (Database → Webhooks) to anything that emails you. Until then, look at
-> the table a couple of times a week. A contact form nobody reads is worse than
-> no contact form.
+---
+
+## Getting the messages by email
+
+The endpoint will email you every enquiry the moment it arrives — it just needs
+an email provider, because Supabase has no mail sending of its own. **Two
+secrets and you are done.** With them unset nothing breaks; the row is still
+saved and readable, you simply are not told about it.
+
+1. Create a free account at **resend.com** (3,000 emails a month free, which is
+   about 2,900 more than this form will ever use). **API Keys → Create**.
+2. Set the two secrets:
+
+```bash
+npx supabase secrets set RESEND_API_KEY="re_xxxxxxxx" CONTACT_NOTIFY_EMAIL="wesleymwilliams@gmail.com"
+```
+
+```bash
+npx supabase functions deploy contact --no-verify-jwt
+```
+
+3. Send yourself a test through <https://thepruuf.com/contact.html>.
+
+**What arrives.** Subject `Pruuf enterprise — Jane Doe · Sunrise Home Care`,
+with a 🔔 on enterprise and partnership enquiries so the ones with a clock on
+them stand out in a list. The body is the intent, name, org, email, roster size,
+and which page it came from. **Reply-To is set to the sender**, so hitting reply
+in your mail client goes to them rather than to Resend.
+
+**Sending from your own domain** (optional, and it looks better than
+`onboarding@resend.dev`): add `thepruuf.com` under Resend → Domains, add the
+DNS records it gives you — which is two clicks, since the domain is already on
+Cloudflare — then:
+
+```bash
+npx supabase secrets set CONTACT_FROM_EMAIL="Pruuf <hello@thepruuf.com>"
+```
+
+**It cannot lose a message.** The row is committed to `contact_requests` before
+the email is attempted, and a failed send is logged rather than raised — so a
+Resend outage means an email you did not get, never an enquiry the sender was
+falsely told had failed. The table remains the record; email is the nudge.
 
 ---
 

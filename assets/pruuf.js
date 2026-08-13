@@ -180,11 +180,11 @@ function initHeroDemo() {
   function sceneReady() {
     clear();
     clock.textContent = '8:04';
-    caption.textContent = 'Go on — tap it.';
+    caption.textContent = 'Tap I’M OK — and watch this phone.';
     feed.innerHTML = `<p class="small muted mb-0" style="padding:.5rem 0">
         Margaret’s daughter, two states away. Her phone is quiet.</p>`;
     screen.innerHTML = chrome('Check in by 10:00 AM') + `
-      <button class="app-big" type="button" id="demo-imok">
+      <button class="app-big is-inviting" type="button" id="demo-imok">
         <span class="app-big-title">I'M OK</span>
         <span class="app-big-sub">Tap to tell your loved ones</span>
       </button>` + footer();
@@ -294,6 +294,51 @@ function initHeroDemo() {
   replay.addEventListener('click', sceneReady);
   missBtn.addEventListener('click', sceneMissed);
   sceneReady();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   The dashboard modal
+   ═══════════════════════════════════════════════════════════════
+   Keeps people on the page. A new tab is the one thing a page trying to hold
+   somebody should not do — they leave, explore, and come back to a tab whose
+   context they have lost, or do not come back at all.
+
+   The iframe's src is set on FIRST open rather than in the markup, so the
+   106KB dashboard is not fetched by the majority of visitors who never ask
+   for it.                                                                  */
+function initDashboardModal() {
+  const modal = $('#dashboard-modal');
+  if (!modal) return;
+
+  const frame = $('iframe', modal);
+  let lastFocused = null;
+
+  const open = trigger => {
+    lastFocused = trigger || document.activeElement;
+    if (!frame.src) frame.src = frame.dataset.src;
+    modal.hidden = false;
+    // The page behind must not scroll under the overlay.
+    document.body.style.overflow = 'hidden';
+    $('[data-close-modal]', modal).focus();
+  };
+
+  const close = () => {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    // Put focus back where it came from, or a keyboard user is dropped at the
+    // top of the document with no idea what just happened.
+    if (lastFocused) lastFocused.focus();
+  };
+
+  $$('[data-open-dashboard]').forEach(b =>
+    b.addEventListener('click', () => open(b)));
+  $$('[data-close-modal]', modal).forEach(b => b.addEventListener('click', close));
+
+  // Click the backdrop, but not the panel itself.
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !modal.hidden) close();
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -477,6 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveals();
   initAppCTAs();
   initHeroDemo();
+  initDashboardModal();
   initRoleSwitch();
   initPricing();
   initForms();
