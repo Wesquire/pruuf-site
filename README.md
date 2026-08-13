@@ -10,6 +10,23 @@ The design brief, the copy strategy and the reasoning behind both are in
 deleting enquiries, changing where the notification email goes and what it says,
 and the release-day switch — is [EMAIL-AND-FORMS.md](EMAIL-AND-FORMS.md).
 
+Two checks, and they answer different questions:
+
+```bash
+python3 site/check.py
+```
+
+```bash
+python3 site/sync_check.py
+```
+
+`check.py` proves the site is internally sound — every link resolves, every
+image exists. `sync_check.py` proves it still tells the truth about the app:
+prices against `Store.swift` and `Pruuf.storekit`, the saving badge against the
+app's own rounding, the trial length against the migration that defines it. A
+page can pass the first and fail the second, and that is the dangerous case —
+a perfectly valid page quoting last month's price. Both run before any push.
+
 ## The pages
 
 | File | What it is |
