@@ -106,6 +106,15 @@ body {
    rendering 290x1342 — stretched vertically by 4.6x. Every device shot on the
    site was distorted, on every page. */
 img, picture, svg, video { max-width: 100%; height: auto; display: block; }
+
+/* Centred by default, everywhere, rather than per-image.
+   Every device shot on this site is narrower than the column it sits in, so
+   the default `margin-inline: 0` pins it left — which is right for a paragraph
+   and wrong for a product photograph, and is most obvious on a phone where the
+   column IS the screen. It was being corrected with an inline style on each
+   image, which works until somebody adds the next image and forgets. A rule
+   cannot forget. */
+picture > img, figure > img { margin-inline: auto; }
 button, input, select, textarea { font: inherit; color: inherit; }
 
 /* Focus. Visible, always — the audience includes keyboard and switch users,
