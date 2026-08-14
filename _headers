@@ -1,0 +1,49 @@
+# Security headers for Cloudflare Pages.
+#
+# The site had none. That is defensible for static HTML right up until the page
+# carries a form that posts credentials-adjacent data to an API, and a /security
+# page telling a technical reader how carefully this product is built — which is
+# the reader most likely to open the network tab and check.
+#
+# Every value below was written against what the pages actually load, not copied
+# from a template: inline <script> in all 8 pages, 81 inline style attributes on
+# the landing page alone, one same-origin iframe embedding the dashboard, and
+# exactly two external hosts.
+
+/*
+  # Clickjacking. The enterprise page embeds the dashboard in an iframe, so
+  # framing must be allowed from this origin and refused everywhere else —
+  # DENY would break our own page.
+  X-Frame-Options: SAMEORIGIN
+
+  # Stops a browser second-guessing a Content-Type. The classic exploit is an
+  # uploaded file sniffed as HTML; nothing here is uploaded, and it costs
+  # nothing to close.
+  X-Content-Type-Options: nosniff
+
+  # A contact form carries a name, an email and a message. Sending the full URL
+  # of the page they came from to another host is more than an external site
+  # needs to know.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # This app asks for no device capability on the web at all. Saying so
+  # explicitly means a future embedded third party cannot quietly ask either.
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()
+
+  # Two years, subdomains included. The domain is HTTPS-only on Cloudflare
+  # already; this stops the first request of a session being the plaintext one.
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+
+  # The CSP, written from what the site does:
+  #
+  #   script-src  'unsafe-inline' because every page has an inline <script>.
+  #               Honest rather than tidy: claiming a nonce we do not emit
+  #               would be a header that looks strong and enforces nothing.
+  #   style-src   'unsafe-inline' for the 81 inline style attributes.
+  #   connect-src the Supabase project, which is where the contact form posts.
+  #   frame-src   'self' for the dashboard iframe on the enterprise page.
+  #   img-src     data: as well as self — the favicon and OG card are inlined.
+  #   object-src  'none' and base-uri 'self' are the two that close off the
+  #               oldest injection tricks and cost nothing here.
+  #   frame-ancestors repeats X-Frame-Options for browsers that prefer CSP.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://taszjafyqcilujpygtbs.supabase.co; frame-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'
