@@ -36,7 +36,15 @@ OUT = os.path.join(HERE, "..", "build", "site-shots")
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 PORT = 8000
 
-PAGES = ["index", "enterprise", "contact", "privacy", "terms", "support", "404"]
+# Derived from what is actually on disk, never typed.
+#
+# This was a hand-maintained list, and it did what hand-maintained lists do:
+# `security.html` was added, the harness reported success, and the one new page
+# was the only page nobody had looked at. A screenshot run that silently skips a
+# page is worse than one that fails, because it produces a clean bill of health.
+PAGES = sorted(
+    f[:-5] for f in os.listdir(HERE) if f.endswith(".html")
+)
 # 500 is the NARROWEST capture Chrome will actually produce.
 #
 # `--window-size=390` yields a 390-pixel-wide IMAGE but a 500-CSS-pixel layout

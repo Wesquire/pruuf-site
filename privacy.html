@@ -169,10 +169,32 @@
       information from anyone under 13.</p>
 
     <h2 id="security">Security</h2>
-    <p>Access to the database is restricted by row-level security rules, so one
-      person&rsquo;s account cannot read another&rsquo;s data. Traffic between the
-      app and our servers is encrypted with HTTPS. No system is perfectly secure,
-      and we cannot guarantee absolute security.</p>
+    <p><strong>There are no passwords.</strong> Pruuf has no accounts, usernames
+      or password resets, so there is no credential of yours to leak, phish, or
+      reuse against you on another site. Two people are connected by a
+      six-character code that grants nothing else.</p>
+    <p><strong>Check-ins are signed on the device that makes them.</strong> Each
+      install holds a private key created inside Apple&rsquo;s Secure Enclave,
+      which cannot be exported, copied to another device or recovered from a
+      backup. We verify the signature before recording a check-in as verified &mdash;
+      so a verified check-in could not have been produced by anybody not holding
+      that unlocked device, ourselves included. Where signing is unavailable the
+      check-in is still recorded, unsigned; being told about a missed day matters
+      more than being able to prove one.</p>
+    <p><strong>Access is restricted by row-level security</strong> inside the
+      database itself, keyed to the account making the request, so one
+      person&rsquo;s data is not returned to another &mdash; a rule the database
+      enforces rather than one our application code has to remember.</p>
+    <p>Traffic between the app and our servers is encrypted with TLS, and stored
+      data is encrypted at rest.</p>
+    <p><strong>We do not offer end-to-end encryption, and we will say why.</strong>
+      Our servers must be able to see that a check-in did not arrive, or they
+      could not alert anyone &mdash; which is the entire purpose of Pruuf. Anybody
+      offering both server-side alerting and end-to-end encryption is describing
+      something that cannot work.</p>
+    <p>No system is perfectly secure, and we cannot guarantee absolute security.
+      A fuller description of how this works is at
+      <a href="security.html">thepruuf.com/security</a>.</p>
 
     <h2 id="limitation">An important limitation</h2>
     <div class="callout">
@@ -232,6 +254,7 @@
         <ul>
           <li><a href="privacy.html">Privacy policy</a></li>
           <li><a href="terms.html">Terms of use</a></li>
+          <li><a href="security.html">Security</a></li>
           <li><a href="terms.html#pricing">Pricing promise</a></li>
         </ul>
       </div>

@@ -107,6 +107,7 @@ SHELL = """<!doctype html>
         <ul>
           <li><a href="privacy.html">Privacy policy</a></li>
           <li><a href="terms.html">Terms of use</a></li>
+          <li><a href="security.html">Security</a></li>
           <li><a href="terms.html#pricing">Pricing promise</a></li>
         </ul>
       </div>
@@ -267,10 +268,32 @@ PRIVACY = """
       information from anyone under 13.</p>
 
     <h2 id="security">Security</h2>
-    <p>Access to the database is restricted by row-level security rules, so one
-      person&rsquo;s account cannot read another&rsquo;s data. Traffic between the
-      app and our servers is encrypted with HTTPS. No system is perfectly secure,
-      and we cannot guarantee absolute security.</p>
+    <p><strong>There are no passwords.</strong> Pruuf has no accounts, usernames
+      or password resets, so there is no credential of yours to leak, phish, or
+      reuse against you on another site. Two people are connected by a
+      six-character code that grants nothing else.</p>
+    <p><strong>Check-ins are signed on the device that makes them.</strong> Each
+      install holds a private key created inside Apple&rsquo;s Secure Enclave,
+      which cannot be exported, copied to another device or recovered from a
+      backup. We verify the signature before recording a check-in as verified &mdash;
+      so a verified check-in could not have been produced by anybody not holding
+      that unlocked device, ourselves included. Where signing is unavailable the
+      check-in is still recorded, unsigned; being told about a missed day matters
+      more than being able to prove one.</p>
+    <p><strong>Access is restricted by row-level security</strong> inside the
+      database itself, keyed to the account making the request, so one
+      person&rsquo;s data is not returned to another &mdash; a rule the database
+      enforces rather than one our application code has to remember.</p>
+    <p>Traffic between the app and our servers is encrypted with TLS, and stored
+      data is encrypted at rest.</p>
+    <p><strong>We do not offer end-to-end encryption, and we will say why.</strong>
+      Our servers must be able to see that a check-in did not arrive, or they
+      could not alert anyone &mdash; which is the entire purpose of Pruuf. Anybody
+      offering both server-side alerting and end-to-end encryption is describing
+      something that cannot work.</p>
+    <p>No system is perfectly secure, and we cannot guarantee absolute security.
+      A fuller description of how this works is at
+      <a href="security.html">thepruuf.com/security</a>.</p>
 
     <h2 id="limitation">An important limitation</h2>
     <div class="callout">
@@ -523,6 +546,157 @@ NOT_FOUND = """
 </section>
 """
 
+# ═══════════════════════════════════════════════════════════════════════════
+# Security. Every claim on this page is a claim the code can be held to —
+# nothing here is aspirational and nothing is adjectival. "Bank-level" and
+# "military-grade" mean nothing, and "end-to-end encrypted" would be a lie:
+# the server reads check-ins, and it MUST, or the alert cannot fire when one
+# does not arrive. That trade-off is stated rather than hidden, because it is
+# the trade-off that makes the product work.
+# ═══════════════════════════════════════════════════════════════════════════
+SECURITY = """
+<section class="section section--tight">
+  <div class="wrap" style="max-width:52rem">
+    <p class="eyebrow">Security</p>
+    <h1 class="h1">What actually protects<br>your mother&rsquo;s data.</h1>
+    <p class="lead" style="margin-top:1.25rem">
+      Specifics, not adjectives. Every claim below is one you could check, and
+      one we would have to answer for.
+    </p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap doc">
+
+    <h2>There is no password to steal</h2>
+    <p class="prose">
+      Most breaches you read about are password breaches. Somebody gets a
+      database of email addresses and password hashes, cracks the weak ones, and
+      tries them everywhere else &mdash; because people reuse passwords.
+    </p>
+    <p class="prose">
+      <strong>Pruuf never created that database.</strong> There are no accounts,
+      no usernames, no passwords and no password reset emails, so there is
+      nothing of that kind to leak, phish, guess, or stuff into another site.
+      Two people are connected by a six-character code that does one job and
+      grants nothing else.
+    </p>
+    <p class="prose muted">
+      We built it that way so an 82-year-old would never be locked out at eleven
+      at night. That it removes the most commonly breached thing in software is
+      a genuine consequence, not a marketing claim.
+    </p>
+
+    <h2 class="h2" style="margin-top:3rem">A check-in can&rsquo;t be forged</h2>
+    <p class="prose">
+      When your mother taps I&rsquo;M OK, her device signs that check-in with a
+      private key created inside the <strong>Secure Enclave</strong> &mdash; the
+      separate security chip in her iPhone, iPad or Apple Watch. That key cannot
+      be exported, copied to another device, or recovered from a backup. It
+      never leaves the chip; the signing happens there.
+    </p>
+    <p class="prose">
+      Our server checks that signature before recording the check-in as
+      verified. Which means a check-in could not have been produced by anybody
+      not physically holding her unlocked device &mdash; <strong>including
+      us</strong>. We could write a row in our own database; we could not
+      produce a signature for it, and the gap would stay visible in the record.
+    </p>
+    <p class="prose">
+      The signature covers the day as well as the moment, so yesterday&rsquo;s
+      check-in cannot be replayed as today&rsquo;s.
+    </p>
+    <div class="callout">
+      <p><strong>And if the signing fails, the check-in still goes.</strong> On
+        an older device, or after a restore, a check-in is recorded without a
+        signature rather than not recorded at all. A family told their mother
+        missed a day she did not miss &mdash; because of a cryptographic detail
+        &mdash; would be a far worse product than one with no signatures.</p>
+    </div>
+
+    <h2 class="h2" style="margin-top:3rem">The database refuses, not the app</h2>
+    <p class="prose">
+      Every request is filtered by <strong>row-level security</strong> inside
+      PostgreSQL itself, keyed to the account making it. One family&rsquo;s data
+      is not kept separate because our application code remembers to check &mdash;
+      it is kept separate because the database declines to return it.
+    </p>
+    <p class="prose muted">
+      The difference matters. Application checks are the ones that get forgotten
+      in the new feature written at midnight. This one cannot be forgotten,
+      because it is not written per feature.
+    </p>
+
+    <h2 class="h2" style="margin-top:3rem">Encrypted in transit and at rest</h2>
+    <p class="prose">
+      Everything between the app and our servers travels over TLS. Everything
+      stored is encrypted on disk. This is the ordinary, expected standard
+      rather than anything clever, and we mention it because its absence would
+      matter.
+    </p>
+
+    <h2 class="h2" style="margin-top:3rem">Yes, it runs on a server. That&rsquo;s the point.</h2>
+    <p class="prose">
+      Almost everything calling itself a check-in app is a reminder running on
+      the phone of the person being checked on. If that phone is flat, off, or
+      at the bottom of a handbag, the app has nothing to say &mdash; and silence
+      is indistinguishable from a good day.
+    </p>
+    <p class="prose">
+      <strong>Pruuf&rsquo;s alerts run on our servers.</strong> At her check-in
+      time the server looks for a tap, and tells her family if there isn&rsquo;t
+      one, whatever state her phone is in. That is the entire product, and it is
+      only possible because a system that is not her phone is watching.
+    </p>
+    <p class="prose">
+      It is also why we do <em>not</em> claim end-to-end encryption. End-to-end
+      would mean our servers cannot read her check-ins &mdash; and a server that
+      cannot read them cannot notice one is missing. Anybody offering you both
+      is describing something that does not work. We would rather tell you which
+      one we chose, and why.
+    </p>
+
+    <h2 class="h2" style="margin-top:3rem">What we never collect</h2>
+    <ul class="tick-list">
+      <li><strong>No location.</strong> Not optional, not buried in a setting.
+        Pruuf never asks for it and could not show it if it wanted to.</li>
+      <li><strong>No camera, microphone or health data.</strong></li>
+      <li><strong>No advertising or analytics trackers</strong> &mdash; in the
+        app, or on this website.</li>
+      <li><strong>Nothing sold or shared.</strong> There is no data business
+        here; the subscription is the business.</li>
+    </ul>
+
+    <h2 class="h2" style="margin-top:3rem">For care providers</h2>
+    <p class="prose">
+      Signed check-ins are the reason the audit trail is worth something. A
+      verified record answers &ldquo;how do you know that was really the
+      client?&rdquo; with cryptography rather than with a policy. The integrity
+      report shows verified and unverified counts side by side &mdash; a report
+      that hid its own gaps would not be an audit trail.
+    </p>
+    <div class="btn-row" style="margin-top:1.5rem">
+      <a class="btn btn--ok" href="contact.html?intent=enterprise">Talk to us about a deployment</a>
+      <a class="btn btn--ghost" href="privacy.html">Read the privacy policy</a>
+    </div>
+
+    <h2 class="h2" style="margin-top:3rem">Found something?</h2>
+    <p class="prose">
+      If you believe you have found a security problem, please
+      <a href="contact.html?intent=security">tell us</a> before telling anyone
+      else, and we will reply within one business day. We will not threaten you,
+      and we will credit you if you would like us to.
+    </p>
+    <p class="prose muted small">
+      No system is perfectly secure and we will not pretend otherwise. What we
+      will do is describe what we actually built, accurately, and fix what we
+      get wrong.
+    </p>
+  </div>
+</section>
+"""
+
 if __name__ == "__main__":
     print("→ site/")
     page("privacy.html", "Pruuf — Privacy Policy",
@@ -537,5 +711,9 @@ if __name__ == "__main__":
          "Fixes for the things that go wrong most often, and a way to reach a "
          "person who will reply within one business day.",
          SUPPORT)
+    page("security.html", "Pruuf — Security",
+         "No passwords to steal, check-ins signed in the Secure Enclave so they "
+         "cannot be forged, and row-level security in the database itself.",
+         SECURITY)
     page("404.html", "Pruuf — Page not found",
          "That page isn't here.", NOT_FOUND, noindex=True)

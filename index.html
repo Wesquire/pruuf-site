@@ -309,9 +309,14 @@
         <p class="lead" style="margin-top:1.25rem">
           This is the single decision that makes Pruuf usable by an 82-year-old.
           There is nothing to sign up for, nothing to verify, nothing to reset
-          at eleven o’clock at night. A code connects two people, and that is
-          the whole of the security model — which also means there is no
-          password of yours for anybody to steal.
+          at eleven o’clock at night.
+        </p>
+        <p class="lead" style="margin-top:1rem">
+          It is also the reason the most commonly breached thing in software
+          isn’t here. Almost every breach you read about is a password breach —
+          <strong>Pruuf never created that database.</strong> No accounts, no
+          usernames, no passwords, nothing to leak, phish or reuse against you
+          somewhere else.
         </p>
       </div>
     </div>
@@ -446,6 +451,71 @@
         </p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SECURITY — specifics, never adjectives
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="section night" id="security">
+  <div class="wrap">
+    <div class="reveal center prose" style="margin-bottom:2.5rem">
+      <p class="eyebrow" style="justify-content:center">Built properly</p>
+      <h2 class="h1">A check-in only<br>she could have made.</h2>
+      <p class="lead" style="margin-top:1rem">
+        Not “bank-level security”. Here is what it actually is.
+      </p>
+    </div>
+
+    <div class="grid grid--3">
+      <div class="card reveal">
+        <h3 class="h3">Signed on her device</h3>
+        <p class="small">
+          Every check-in is signed with a key created inside the
+          <strong>Secure Enclave</strong> — the security chip in her iPhone,
+          iPad or Watch. It can’t be exported, copied to another phone, or
+          pulled out of a backup.
+        </p>
+        <p class="small">
+          So a check-in can’t be faked by anybody not holding her unlocked
+          device — <strong>including us</strong>. We could write a row in our own
+          database. We couldn’t sign it.
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <h3 class="h3">No password to steal</h3>
+        <p class="small">
+          Almost every breach you read about is a password breach. Pruuf never
+          created that database — no accounts, no usernames, no passwords, and
+          nothing to phish or reuse against you elsewhere.
+        </p>
+        <p class="small">
+          We did it so nobody would be locked out at eleven at night. Removing
+          the most-breached thing in software came free.
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <h3 class="h3">The database refuses</h3>
+        <p class="small">
+          One family’s data isn’t kept separate because our code remembers to
+          check. It’s kept separate by <strong>row-level security</strong> inside
+          the database itself, which declines to return it.
+        </p>
+        <p class="small">
+          Checks written per-feature are the ones forgotten in the feature
+          written at midnight. This one isn’t written per feature.
+        </p>
+      </div>
+    </div>
+
+    <p class="center small" style="margin-top:2.5rem;max-width:44rem;margin-inline:auto;color:var(--on-night-muted)">
+      We don’t claim end-to-end encryption, and we’ll tell you why: it would mean
+      our servers can’t read her check-ins — and a server that can’t read them
+      can’t notice one is missing. That noticing is the entire product.
+      <a href="security.html">The full detail, in plain English →</a>
+    </p>
   </div>
 </section>
 
