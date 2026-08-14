@@ -96,6 +96,79 @@ def wait_for_it(minutes=20):
     return False
 
 
+def check_privacy_claims():
+    """Hold the LIVE site to the promises its own pages make.
+
+    Two claims on `privacy.html` and `security.html` are load-bearing:
+
+        "no fonts or scripts are loaded from anybody else's servers"
+        "No advertising or analytics trackers — in the app, or on this website."
+
+    Nothing in this repository can guarantee those. The HTML is clean, but the
+    host injects at the edge: a real browser load was observed fetching
+    `static.cloudflareinsights.com/beacon.min.js` — Cloudflare Web Analytics,
+    added automatically, invisible to `curl` because it is only injected for
+    browser user-agents, and invisible to `check.py` because it is not in any
+    file we author.
+
+    It stopped once the site began sending a restrictive `Content-Security-
+    Policy`, which Cloudflare respects. So the claim is true today because of a
+    header, not because of a promise — and a header can be relaxed by somebody
+    who does not know it is load-bearing.
+
+    This asserts the two mechanisms that keep the claim honest, against the live
+    site, with a browser user-agent so it sees what a visitor sees.
+    """
+    print("\n\033[1mThe privacy claims, against the live site\033[0m\n")
+
+    browser = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                             "AppleWebKit/537.36 (KHTML, like Gecko) "
+                             "Chrome/126.0 Safari/537.36"}
+
+    for path in ["/", "/enterprise", "/privacy", "/security"]:
+        status, body, headers = get(SITE + path, headers=browser)
+        if status != 200:
+            ok(False, f"{path} is reachable", str(status))
+            continue
+
+        hosts = set(re.findall(r"https?://([a-zA-Z0-9.-]+)", body or ""))
+        foreign = {h for h in hosts
+                   if not h.endswith("thepruuf.com")
+                   and h not in ("www.w3.org",)            # SVG namespaces
+                   and not h.endswith("apple.com")}        # App Store links, not requests
+
+        # Header names are case-insensitive and `http.client` preserves the
+        # server's casing, so a direct dict lookup silently misses.
+        csp = next((v for k, v in (headers or {}).items()
+                    if k.lower() == "content-security-policy"), "")
+        blocked = "default-src 'self'" in csp and "cloudflareinsights" not in csp
+
+        # The failing state is a tracker that can actually RUN. A tracker that
+        # is present but blocked by our own CSP is a warning, not a failure —
+        # it is real, it needs fixing, and it cannot be fixed from this
+        # repository, so failing the build on it would only teach somebody to
+        # ignore this suite.
+        ok(not foreign or blocked,
+           f"{path} cannot load a third-party script",
+           ", ".join(sorted(foreign)) + " — AND NOT BLOCKED" if foreign and not blocked
+           else "")
+
+        if foreign and blocked:
+            print(f"\033[33m  WARN  {path} carries {', '.join(sorted(foreign))} "
+                  f"in its HTML — blocked by our CSP, so nothing loads and no "
+                  f"data leaves.\033[0m")
+            print("        Cloudflare injects this automatically. It is invisible "
+                  "to check.py because it is in no file we author.")
+            print("        \033[1mTurn it off:\033[0m Cloudflare dashboard → the "
+                  "thepruuf.com zone → Analytics & Logs → Web Analytics → "
+                  "disable for this site.")
+            print("        Until then, \"no advertising or analytics trackers "
+                  "on this website\" is true only because of a header.")
+
+        ok(bool(csp), f"{path} sends a Content-Security-Policy",
+           "MISSING — an injected beacon would run" if not csp else "")
+
+
 def main():
     if "--wait" in sys.argv and not is_up():
         if not wait_for_it():
@@ -129,6 +202,8 @@ def main():
 
     status, _, _ = get(f"https://www.{APEX}/")
     ok(status == 200, "www serves too", f"HTTP {status}")
+
+    check_privacy_claims()
 
     # ── Every page ────────────────────────────────────────────────────────
     for path in PAGES:
