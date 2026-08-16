@@ -157,5 +157,142 @@ check("the free trial length",
 check("the sender's price", "$0" in index, True,
       "the site must go on saying the person checking in pays nothing")
 
+
+# ── Strings the site puts in the app's mouth ────────────────────────────────
+#
+# The numbers above were never the whole risk. The site also QUOTES the app —
+# "the screen says X" — and a quotation is the strongest kind of factual claim a
+# marketing page can make, because a reader takes it as something they will see
+# with their own eyes.
+#
+# One of them had already gone false. The FAQ said:
+#
+#     The screen also counts down to her time — "Check in by 10:00 AM ·
+#     1h 56m left" — so she is never guessing how long she has.
+#
+# The app renders "Check in by 10:00 AM" and nothing else. The live countdown
+# was removed on purpose, with a written rationale about not putting a pressure
+# clock in front of somebody who may already feel like a burden. Nothing caught
+# it: `check.py` proves the page is internally sound, and everything above this
+# line compares NUMBERS. A page can be perfectly valid, perfectly priced, and
+# describing a screen that does not exist.
+#
+# So: any text the site presents as something the app says must be marked
+#
+#     <span data-app-string="Check in by">"Check in by 10:00 AM"</span>
+#
+# and the marked value must exist as a real string literal in the Swift
+# sources. The mark is the honest part — a heuristic that guessed which quotes
+# were UI would either miss the next one or cry wolf about ordinary prose — and
+# it is enforced in both directions: an unmarked quote is invisible to this
+# check, so the FORBIDDEN list below covers the specific claims already known to
+# be false, and a marked one cannot rot without the build going red.
+
+swift_sources = []
+for folder in ("Pruufapp", "Shared", "PruufWatch"):
+    for dirpath, _dirs, files in os.walk(os.path.join(ROOT, folder)):
+        for fn in files:
+            if fn.endswith(".swift"):
+                with open(os.path.join(dirpath, fn)) as fh:
+                    swift_sources.append(fh.read())
+swift = "\n".join(swift_sources)
+
+# Every string literal in the app, interpolation and all. `"Check in by \(due)"`
+# is captured as `Check in by \(due)`, so a claim quoting the static half of an
+# interpolated string still matches — which is exactly the shape of every claim
+# the site actually makes.
+literals = re.findall(r'"((?:[^"\\\n]|\\.)*)"', swift)
+
+quoted = re.findall(r'<span data-app-string="([^"]+)"[^>]*>(.*?)</span>', pages, re.S)
+check("the site quotes at least one app string", len(quoted) > 0, True,
+      "if this drops to zero the check below is asserting nothing")
+
+for claim, shown in quoted:
+    check(f"the app really says {claim!r}",
+          any(claim in lit for lit in literals), True,
+          "no Swift string literal contains it — the site is quoting a screen "
+          "that does not exist")
+    # And the visible text must actually contain what it claims to be quoting,
+    # so the marker cannot drift away from the sentence it is vouching for.
+    visible = re.sub(r"<[^>]+>", "", shown)
+    check(f"the visible quote around {claim!r} matches its marker",
+          claim.lower() in visible.lower().replace("“", "").replace("”", ""),
+          True)
+
+# Claims known to be false, kept as a regression guard. This list is a
+# blacklist, which is a weaker tool than the marker above and is here for one
+# reason: the defect it records shipped, and a check that would not have caught
+# it is not much of a check. Each entry names what the app actually does.
+FORBIDDEN = [
+    ("counts down to your time",
+     "the sender's screen shows no countdown BEFORE the deadline — "
+     "ParentHomeView renders 'Check in by 10:00 AM' and only counts once overdue"),
+    ("counts down to her time",
+     "same claim, the FAQ's wording"),
+    ("1h 56m left",
+     "quotes a countdown string the app has never rendered on the sender's home screen"),
+]
+for phrase, why in FORBIDDEN:
+    check(f"the site does not claim {phrase!r}", phrase.lower() not in pages.lower(), True, why)
+
+
+# ── The location promises, against the code that has to keep them ──────────
+#
+# Three sentences now appear on the site that are claims about behaviour rather
+# than about prices, and each one is checkable:
+#
+#   "off in two taps"          → three modes exist, and `never` is one of them
+#   "deleted after 30 days"    → the purge really is 30 days
+#   "never in the background"  → the app holds WhenInUse and nothing wider
+#
+# The third is the one worth automating hardest. An `Always` authorisation
+# added later would make the site's flagship privacy sentence false, silently,
+# in a build that compiled perfectly — and it is exactly the kind of change
+# somebody makes at midnight to fix a bug about a missing fix.
+
+migrations = "".join(
+    read("supabase", "migrations", f)
+    for f in sorted(os.listdir(os.path.join(ROOT, "supabase", "migrations")))
+    if f.endswith(".sql"))
+
+check("locations really are purged after 30 days",
+      "30 days" in pages.lower() or "30 days" in index.lower(), True,
+      "the site should say how long positions are kept")
+check("and the purge really is 30 days",
+      bool(re.search(r"delete from event_locations\s+where created_at < now\(\) - interval '30 days'",
+                     migrations)), True,
+      "the site promises 30 days; purge_old_locations() must agree")
+
+check("the sender can genuinely turn it off",
+      "'never'" in migrations and "share_location in ('always', 'help_only', 'never')" in migrations,
+      True, "the site says it can be switched off entirely")
+
+pbxproj = read("Pruufapp.xcodeproj", "project.pbxproj")
+check("the app asks for when-in-use location only",
+      "NSLocationWhenInUseUsageDescription" in pbxproj, True)
+check("and holds NO always-on location permission",
+      "NSLocationAlwaysAndWhenInUseUsageDescription" not in pbxproj
+      and "NSLocationAlwaysUsageDescription" not in pbxproj, True,
+      "the site says Pruuf never looks in the background — an Always "
+      "authorisation would make that false")
+
+# And the app must not have quietly become a tracker: nothing may start
+# continuous updates. `requestLocation()` is one fix and then silence.
+locator = read("Shared", "Locator.swift")
+# Comments stripped first. The check is about what the app DOES, and the file
+# explains in prose why it does not call `startUpdatingLocation` — a checker
+# that cannot tell code from a comment about code fails on the very file that
+# documents the promise it is enforcing. It failed exactly that way when first
+# written, which is the reason for this note.
+code = re.sub(r"//.*", "", locator)
+check("the app takes ONE fix rather than following anybody",
+      "requestLocation()" in code and "startUpdatingLocation" not in code, True,
+      "startUpdatingLocation would make 'never follows you around' false")
+
+# The claim that there is no AI. Cheap to assert, and it is the one claim on
+# the site that a competitor would most enjoy disproving.
+for word in ("openai", "anthropic", "gpt-", "llm"):
+    check(f"no {word} dependency, as the site says", word not in migrations.lower(), True)
+
 print(f"\n  {GREEN if not failed else RED}{passed} passed, {failed} failed{OFF}\n")
 sys.exit(1 if failed else 0)

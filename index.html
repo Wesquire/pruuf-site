@@ -197,10 +197,14 @@
             <li>A reminder half an hour before your time, so it’s hard to forget.</li>
             <li><strong>Check in as often as you like.</strong> Once is enough,
               but the button never locks — tap it again after lunch or before
-              bed and they’ll be told again. It also counts down to your time,
-              so you always know where you stand.</li>
+              bed and they’ll be told again. The screen tells you the time
+              you’re due, and says so plainly once it has passed.</li>
             <li>Nothing else on the screen to press by mistake.</li>
-            <li>It never shows anybody where you are.</li>
+            <li><strong>You choose whether to share where you are.</strong>
+              Pruuf can show your family where you were when you tapped — so if
+              you ever press I NEED HELP, they know where to come. It looks
+              once, at that moment, and never follows you around. Say no and
+              nothing changes about anything else.</li>
             <li><strong>iPhone, iPad and Apple Watch</strong> — check in from
               whichever is nearest, and add as many of your own devices as you
               own. One account covers all of them.</li>
@@ -433,9 +437,12 @@
       </div>
       <div class="reveal">
         <ul class="tick-list tick-list--cross" style="font-size:1.0625rem">
-          <li><strong>No location tracking.</strong> Not optional, not buried in
-            a setting — Pruuf never asks for location and could not show it if
-            it wanted to.</li>
+          <li><strong>No location tracking.</strong> Pruuf can record where
+            somebody was <em>at the moment they tapped</em>, if they chose to
+            share it — and nothing in between. There is no background location,
+            no history of where anybody goes, and no way to ask the app where
+            somebody is right now. It is off in two taps and deleted after 30
+            days.</li>
           <li><strong>No cameras, microphones or health data.</strong></li>
           <li><strong>No feed, streaks, badges or scores.</strong> Missing a day
             is not a failure to be shamed for. It is a signal to act on.</li>
@@ -511,9 +518,13 @@
     </div>
 
     <p class="center small" style="margin-top:2.5rem;max-width:44rem;margin-inline:auto;color:var(--on-night-muted)">
-      We don’t claim end-to-end encryption, and we’ll tell you why: it would mean
-      our servers can’t read her check-ins — and a server that can’t read them
-      can’t notice one is missing. That noticing is the entire product.
+      Everything is encrypted in transit with TLS and encrypted at rest on disk —
+      which is the ordinary standard, not a headline, and we would rather say so
+      than dress it up. We don’t claim end-to-end encryption, and we’ll tell you
+      why: it would mean our servers can’t read her check-ins — and a server that
+      can’t read them can’t notice one is missing. That noticing is the entire
+      product. There is no AI here either, and no algorithm deciding whether
+      somebody is in trouble: a person taps a button, or they don’t.
       <a href="security.html">The full detail, in plain English →</a>
     </p>
   </div>
@@ -522,6 +533,50 @@
 <!-- ══════════════════════════════════════════════════════════════════
      PRICING
      ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="everyone">
+  <div class="wrap">
+    <div class="center prose reveal" style="margin-bottom:2.5rem">
+      <p class="eyebrow" style="justify-content:center">One price</p>
+      <h2 class="h1">Everyone you love,<br>on one subscription.</h2>
+      <p class="lead" style="margin-top:1rem">
+        Not one parent. <strong>Everyone.</strong> Mum, Dad, your aunt, the
+        neighbour who has nobody else &mdash; add as many people as you look out
+        for and the price never moves. Adding the fourth person costs exactly
+        what adding the first one did, which is nothing.
+      </p>
+    </div>
+
+    <div class="grid grid-2" style="gap:1.5rem;align-items:stretch">
+      <div class="card reveal">
+        <h3 class="h3">It works from your side</h3>
+        <p>You subscribe, and then you invite them. Pruuf writes the message and
+          gives you a six-character code; they install the app, type it in, and
+          they are connected. <strong>They are never charged and never shown a
+          price</strong> &mdash; there is no payment screen anywhere in their
+          copy of the app, so nobody has to talk a parent through a card
+          number.</p>
+        <p class="small">One subscription. Every person you look after.</p>
+      </div>
+
+      <div class="card reveal">
+        <h3 class="h3">And it works from theirs</h3>
+        <p>The person checking in has their own code, and they can give it to
+          whoever they like. One tap tells all of them at once &mdash; a
+          daughter three states away, a son who worries, the brother who rings
+          every Sunday. <strong>They tap once; everybody exhales.</strong></p>
+        <p class="small">One tap. However many people care.</p>
+      </div>
+    </div>
+
+    <div class="center prose reveal" style="margin-top:2.5rem">
+      <p>That is the whole shape of it: <strong>one tap out, one payment
+        in</strong>, and as many people on either end as a family happens to
+        have. Nobody is asked to choose which parent to protect, and nobody is
+        asked to choose which child gets told.</p>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="pricing" style="background:#F4F1EA">
   <div class="wrap">
     <div class="center prose reveal" style="margin-bottom:2.5rem">
@@ -530,8 +585,9 @@
       <p class="lead" style="margin-top:1rem">
         Charging an 80-year-old for the button that tells her family she’s alive
         is not a business we want to be in. <strong>Sending is free, for
-        unlimited people, forever.</strong> The family who wants the alerts pays,
-        once, for everyone they look after.
+        unlimited people, forever.</strong> The family who wants the alerts pays
+        once &mdash; for everyone they look after, however many that turns out
+        to be.
       </p>
     </div>
 
@@ -570,11 +626,11 @@
         <span class="chip">For the family</span>
         <h3 class="h3" style="margin-top:1rem">Pruuf for Family</h3>
         <p class="price" style="margin:1.25rem 0 .25rem">
-          <span data-price data-monthly="$9.99" data-annual="$99.99">$99.99</span>
+          <span data-price data-monthly="$4.99" data-annual="$49.99">$49.99</span>
           <small data-price-note data-monthly="per month" data-annual="per year">per year</small>
         </p>
         <p class="muted small" data-annual-only>
-          That’s <strong>$8.33 a month</strong>, billed once — 16% less than
+          That’s <strong>$4.17 a month</strong>, billed once — 16% less than
           paying monthly.
         </p>
         <hr class="hr">
@@ -637,20 +693,38 @@
             the button never locks — plenty of people like to say so again
             after lunch or before bed, and everyone connected is told each
             time.</p>
-          <p>The screen also counts down to her time — “Check in by 10:00 AM ·
-            1h 56m left” — so she is never guessing how long she has. Once
-            she’s checked in it switches to when the next one is due.</p>
+          <p>The screen tells her when she is due —
+            <span data-app-string="Check in by">“Check in by 10:00 AM”</span> —
+            and once she has checked in it switches to when the next one is
+            due. There is deliberately no ticking countdown before her time: a
+            clock counting down on the screen of somebody who may already feel
+            like a burden turns a gentle promise into pressure, all morning.
+            Once the time has passed, the number stops being pressure and
+            starts being useful, so it appears then —
+            <span data-app-string="Overdue">“Overdue · 15m late”</span>.</p>
         </div>
       </details>
       <details>
         <summary>Does it show me where they are?</summary>
         <div class="faq-body">
-          <p>No — and it never will. Pruuf does not ask for location permission
-            and has no location data to show. It answers exactly one question:
-            have they said they’re OK today.</p>
-          <p>This is deliberate. The moment an app like this becomes a tracker,
-            the person being tracked stops wanting it on their phone, and an app
-            that gets deleted protects nobody.</p>
+          <p>Only if they said yes, and only at the moment they tapped.</p>
+          <p><strong>Pruuf is not a tracker and will never be one.</strong> That
+            distinction is the whole design. A tracker answers “where is she
+            right now”, which means watching somebody all day. Pruuf answers
+            “where was she when she asked for help”, which means looking exactly
+            once, when she pressed a button herself.</p>
+          <p>The person checking in is asked during setup, before they have an
+            account, and they can choose to share it every time they check in,
+            only if they press I NEED HELP, or never. It is one switch in
+            Settings and it takes two taps to change. If they say no, everything
+            else about Pruuf works exactly as it did.</p>
+          <p>When there is a location to show, their card says so and one tap
+            opens a real map with streets and buildings, the time it was taken,
+            and how exact it is. When there isn’t, the card says which of those
+            three reasons it is — so “we haven’t got one” can never be mistaken
+            for “they refused”.</p>
+          <p>Locations are deleted after 30 days. Only the people they have
+            added can ever see one.</p>
         </div>
       </details>
       <details>
