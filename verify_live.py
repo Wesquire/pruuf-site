@@ -33,8 +33,15 @@ from urllib.parse import urljoin, urlparse
 
 SITE = "https://thepruuf.com"
 APEX = "thepruuf.com"
+# Every page in the sitemap, and that is the point of the list rather than a
+# coincidence: this file both FETCHES each one and asserts the sitemap holds
+# exactly this many. `security.html` was missing from here — added to the site
+# in d071a14 and never added to this list — so the live security page was never
+# fetched by anything, and the sitemap assertion failed 7-against-6 on every
+# run. A checker that is wrong is worse than no checker, because its failure
+# becomes the thing everybody learns to ignore.
 PAGES = ["/", "/enterprise.html", "/contact.html", "/support.html",
-         "/privacy.html", "/terms.html"]
+         "/security.html", "/privacy.html", "/terms.html"]
 FN = "https://taszjafyqcilujpygtbs.supabase.co/functions/v1/contact"
 KEY = "sb_publishable_LvnQvFeV0UNFX82WkbzFFw_c8yKwix4"
 
