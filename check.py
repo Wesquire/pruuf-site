@@ -210,6 +210,48 @@ check(os.path.exists(os.path.join(HERE, "dashboard", "index.html")),
       "the enterprise page embeds dashboard/index.html, which is not here")
 check(os.path.exists(os.path.join(HERE, "favicon.ico")), "no favicon.ico")
 
+# ── Pruuf never tells anybody to seek emergency help ─────────────────────
+#
+# A product boundary, enforced here because prose is where it erodes.
+#
+# Pruuf notifies the people a family chose. It does not know what a situation
+# is, cannot escalate and cannot follow up — so it is in no position to advise
+# anybody on whether to involve anyone else. That judgement belongs to the
+# person who is actually there.
+#
+# The failure mode is subtle and worth naming, because the sentences that break
+# this rule are always written with good intentions. Once a page tells you to
+# call for help in ONE place, every page that stays quiet starts to read as
+# "this one is not serious" — so the silence becomes advice too, and it is
+# advice nobody wrote or reviewed. Naming a particular service compounds it by
+# positioning Pruuf beside that service, which is a characterisation neither an
+# app reviewer nor a court would read the way the sentence intended.
+#
+# What IS allowed, and is deliberately not caught below: the bare factual
+# disclaimer "Pruuf is not an emergency service". That is the opposite of
+# encouragement — it is the sentence that stops somebody assuming Pruuf
+# dispatches help — and removing it would create the very misunderstanding this
+# whole rule exists to prevent.
+DIRECTIVES = [
+    "call your local emergency", "ring your local emergency",
+    "call emergency services", "contact emergency services",
+    "call 911", "dial 911", "call 999", "dial 999",
+    "needs help right now, call", "needs help now, call",
+    "in place of calling emergency",
+]
+NAMED_SERVICES = ["911", "ambulance", "paramedic"]
+
+for name in PAGES:
+    raw = parsed[name][1]
+    low = raw.lower()
+    for phrase in DIRECTIVES:
+        check(phrase not in low,
+              f"{name}: tells the reader to seek emergency help — \"{phrase}\"")
+    for word in NAMED_SERVICES:
+        check(word not in low,
+              f"{name}: names an emergency service — \"{word}\" — which "
+              f"positions Pruuf beside it")
+
 # ── robots.txt and sitemap.xml ───────────────────────────────────────────
 # Both name the domain, and the sitemap has to stay level with the pages —
 # a sitemap that lists a page which no longer exists, or misses one that does,
