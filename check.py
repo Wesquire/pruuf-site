@@ -227,30 +227,38 @@ check(os.path.exists(os.path.join(HERE, "favicon.ico")), "no favicon.ico")
 # positioning Pruuf beside that service, which is a characterisation neither an
 # app reviewer nor a court would read the way the sentence intended.
 #
-# What IS allowed, and is deliberately not caught below: the bare factual
-# disclaimer "Pruuf is not an emergency service". That is the opposite of
-# encouragement — it is the sentence that stops somebody assuming Pruuf
-# dispatches help — and removing it would create the very misunderstanding this
-# whole rule exists to prevent.
-DIRECTIVES = [
-    "call your local emergency", "ring your local emergency",
-    "call emergency services", "contact emergency services",
-    "call 911", "dial 911", "call 999", "dial 999",
-    "needs help right now, call", "needs help now, call",
-    "in place of calling emergency",
+# The rule is now ABSOLUTE: the word does not appear on this site at all.
+#
+# An earlier version of this check deliberately permitted the bare disclaimer
+# "Pruuf is not an emergency service", on the reasoning that a denial is the
+# opposite of encouragement and is what stops a reader assuming help gets
+# dispatched. That exception was removed on the product owner's decision, and
+# the argument against keeping it is a good one: a denial still frames Pruuf in
+# terms of emergency response, and a reader who has to be told what a product is
+# NOT has already been invited to picture it that way.
+#
+# What replaced it everywhere is a positive statement of what Pruuf does —
+# "Pruuf notifies the people you add", "it dispatches nothing" — which carries
+# the same limitation without the framing. See CHATREFRESH §9.
+#
+# A single banned word is a stronger rule than a list of allowed exceptions,
+# and it is the only version of this rule that cannot erode: an exception list
+# grows one reasonable-sounding entry at a time.
+BANNED = [
+    "emergency",          # the word itself, in any construction
+    "911", "999 ", "112 ",
+    "ambulance", "paramedic",
+    "dispatch help", "dispatches help",
+    "call for help", "calling for help",
 ]
-NAMED_SERVICES = ["911", "ambulance", "paramedic"]
 
 for name in PAGES:
     raw = parsed[name][1]
     low = raw.lower()
-    for phrase in DIRECTIVES:
-        check(phrase not in low,
-              f"{name}: tells the reader to seek emergency help — \"{phrase}\"")
-    for word in NAMED_SERVICES:
+    for word in BANNED:
         check(word not in low,
-              f"{name}: names an emergency service — \"{word}\" — which "
-              f"positions Pruuf beside it")
+              f"{name}: contains \"{word}\" — Pruuf neither seeks emergency help "
+              f"nor describes itself in relation to it. Say what Pruuf DOES.")
 
 # ── robots.txt and sitemap.xml ───────────────────────────────────────────
 # Both name the domain, and the sitemap has to stay level with the pages —
