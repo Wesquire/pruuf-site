@@ -255,13 +255,28 @@ migrations = "".join(
     for f in sorted(os.listdir(os.path.join(ROOT, "supabase", "migrations")))
     if f.endswith(".sql"))
 
-check("locations really are purged after 30 days",
-      "30 days" in pages.lower() or "30 days" in index.lower(), True,
-      "the site should say how long positions are kept")
-check("and the purge really is 30 days",
-      bool(re.search(r"delete from event_locations\s+where created_at < now\(\) - interval '30 days'",
+# 24 hours, everywhere the promise lives (plan_2.0 Phases 1 + 6): the
+# pages, the app's own promise row, and the purge itself must all say the
+# same thing. The migration-side pin checks the CURRENT (newest)
+# definition; the old 30-day text remains in migration history and proves
+# nothing about what runs tonight.
+check("the site promises deletion after 24 hours",
+      "24 hours" in pages.lower() and "24 hours" in index.lower(), True,
+      "privacy/security and the landing page must all carry the promise")
+check("and no page still says the old 30 days about locations",
+      "deleted after 30 days" not in pages.lower()
+      and "deleted after 30 days" not in index.lower(), True,
+      "a leftover 30-day claim would understate the promise now being made")
+check("the app's own promise row agrees",
+      "deleted after 24 hours" in read("Pruufapp", "Views", "LocationSettingsView.swift"),
+      True, "the consent screen must make the same promise the site does")
+check("and the purge really is 24 hours",
+      bool(re.search(r"delete from event_locations\s+where created_at < now\(\) - interval '24 hours'",
                      migrations)), True,
-      "the site promises 30 days; purge_old_locations() must agree")
+      "the published retention promise rests on purge_old_locations()")
+check("the switch is named on the site as it is in the app",
+      "share my\n        location" in pages.lower() or "share my location" in pages.lower(),
+      True, "privacy names the switch; a wrong name strands the reader")
 
 check("the sender can genuinely turn it off",
       "'never'" in migrations and "share_location in ('always', 'help_only', 'never')" in migrations,
