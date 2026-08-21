@@ -183,7 +183,7 @@ function initHeroDemo() {
     caption.textContent = 'Tap I’M OK — and watch this phone.';
     feed.innerHTML = `<p class="small muted mb-0" style="padding:.5rem 0">
         Margaret’s daughter, two states away. Her phone is quiet.</p>`;
-    screen.innerHTML = chrome('Check in by 10:00 AM · 1h 56m left') + `
+    screen.innerHTML = chrome('Check in by 10:00 AM') + `
       <button class="app-big is-inviting" type="button" id="demo-imok">
         <span class="app-big-title">I'M OK</span>
         <span class="app-big-sub">Tap to tell your loved ones</span>
@@ -203,12 +203,12 @@ function initHeroDemo() {
         <span class="app-big-sub app-big-sub--strong">
           Your next check-in is tomorrow at 10:00 AM.</span>
         <span class="app-big-sub" style="opacity:.8;font-size:calc(var(--w) * .042)">
-          Checked in at 8:04 AM · tap to say so again</span>
+          Checked in at 8:04 AM · I'M OK AGAIN</span>
       </button>` + footer();
     wire();
 
     after(320, () => {
-      feed.innerHTML = notif('Margaret checked in', 'now', 'She’s OK today. 8:04 AM.');
+      feed.innerHTML = notif('Margaret checked in ✓', 'now', 'Checked in at 8:04 AM');
     });
     after(1500, () => {
       feed.insertAdjacentHTML('beforeend', `
@@ -223,7 +223,7 @@ function initHeroDemo() {
     caption.textContent = 'This part runs on our servers — not on her phone.';
     feed.innerHTML = `<p class="small muted mb-0" style="padding:.5rem 0">
         10:00 AM. Nothing has been tapped.</p>`;
-    screen.innerHTML = chrome('Check in by 10:00 AM · 15m late') + `
+    screen.innerHTML = chrome('Overdue · 15m late') + `
       <div class="app-big" style="opacity:.4">
         <span class="app-big-title">I'M OK</span>
         <span class="app-big-sub">Tap to tell your loved ones</span>
@@ -233,8 +233,8 @@ function initHeroDemo() {
       after(420 * (i + 1), () => { clock.textContent = v; }));
 
     after(1500, () => {
-      feed.innerHTML = notif('Margaret hasn’t checked in', '10:00 AM',
-        'It’s past her 10:00 AM check-in time.', true);
+      feed.innerHTML = notif('⚠️ Margaret has NOT checked in', '10:00 AM',
+        'No check-in today. You may want to reach out.', true);
     });
     after(2300, () => {
       feed.insertAdjacentHTML('beforeend', `
@@ -261,23 +261,25 @@ function initHeroDemo() {
   /* ── Scene 4: the help button ──────────────────────────────────────── */
   function sceneHelp() {
     clear();
-    caption.textContent = 'Tapped by mistake? Cancel it and nobody is told a thing.';
-    screen.innerHTML = chrome('Check in by 10:00 AM · 1h 56m left') + `
+    caption.textContent = 'Tapped by mistake? Stand it down and everyone is told it’s over.';
+    screen.innerHTML = chrome('Check in by 10:00 AM') + `
       <div class="app-big app-big--help fade-swap">
         <span class="app-tick">${ICON.bellBig}</span>
-        <span class="app-big-title app-big-title--small">Your loved ones<br>have been told</span>
+        <span class="app-big-title app-big-title--small">HELP IS<br>ON THE WAY</span>
         <span class="app-big-sub app-big-sub--strong">
-          Sent to everyone connected to you.</span>
+          Tap to cancel if you're OK</span>
       </div>
       <button class="app-loved" type="button" id="demo-cancel">CANCEL — I'M FINE</button>`;
     $('#demo-cancel', screen).addEventListener('click', () => {
-      caption.textContent = 'Cancelled. Nobody was alerted.';
-      after(600, sceneReady);
+      caption.textContent = 'Stood down — and everyone who was told gets the all-clear.';
+      feed.innerHTML = notif('Margaret has cancelled their help request', 'now',
+        'Margaret says they’re OK and stood the alert down themselves.');
+      after(1400, sceneReady);
     });
 
     after(300, () => {
-      feed.innerHTML = notif('Margaret needs help', 'now',
-        'She tapped I NEED HELP just now.', true);
+      feed.innerHTML = notif('🚨 Margaret NEEDS HELP', 'now',
+        'They tapped the help button in Pruuf. Please check on them now.', true);
     });
   }
 

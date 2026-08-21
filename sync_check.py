@@ -260,12 +260,17 @@ migrations = "".join(
 # same thing. The migration-side pin checks the CURRENT (newest)
 # definition; the old 30-day text remains in migration history and proves
 # nothing about what runs tonight.
+# Whitespace-collapsed BEFORE checking: "deleted after 30\n  days" wrapped
+# across a line break sailed straight past the exact-phrase version of this
+# pin while the page said the wrong thing — found by Phase 9's manual read.
+flat_pages = " ".join(pages.lower().split())
+flat_index = " ".join(index.lower().split())
 check("the site promises deletion after 24 hours",
-      "24 hours" in pages.lower() and "24 hours" in index.lower(), True,
+      "24 hours" in flat_pages and "24 hours" in flat_index, True,
       "privacy/security and the landing page must all carry the promise")
 check("and no page still says the old 30 days about locations",
-      "deleted after 30 days" not in pages.lower()
-      and "deleted after 30 days" not in index.lower(), True,
+      "deleted after 30 days" not in flat_pages
+      and "deleted after 30 days" not in flat_index, True,
       "a leftover 30-day claim would understate the promise now being made")
 check("the app's own promise row agrees",
       "deleted after 24 hours" in read("Pruufapp", "Views", "LocationSettingsView.swift"),
@@ -274,6 +279,46 @@ check("and the purge really is 24 hours",
       bool(re.search(r"delete from event_locations\s+where created_at < now\(\) - interval '24 hours'",
                      migrations)), True,
       "the published retention promise rests on purge_old_locations()")
+# Enterprise told organisations "No location, ever — the app does not
+# request location permission" for four days after location sharing
+# shipped: the 12-H rewrite covered index/privacy/security and missed this
+# page entirely. Found by Phase 9's full read. Every page that talks about
+# location must carry the 24-hour truth, and the dead claim must stay dead.
+enterprise = read("site", "enterprise.html")
+flat_ent = " ".join(enterprise.lower().split())
+check("enterprise no longer denies the location feature exists",
+      "does not request location permission" not in flat_ent
+      and "no location, ever" not in flat_ent, True,
+      "the app requests when-in-use permission and stores chosen positions")
+check("and enterprise carries the same 24-hour promise",
+      "24 hours" in flat_ent, True,
+      "every page describing location must state the retention")
+check("no page sells an escalation channel the code does not have",
+      "text and voice escalation" not in flat_ent, True,
+      "SMS/voice escalation does not exist in the codebase")
+
+# The live-demo widget is a phone the site DRAWS, and it drifted twice:
+# it kept rendering the pre-deadline countdown BUG-074 removed from the
+# page copy (the fix never reached the JS), and its help scene said "Your
+# loved ones have been told" — the exact sentence the BUG-053 class exists
+# to hunt, five defects deep. The widget's screens are held to the app's
+# real strings from here on.
+widget = read("site", "assets", "pruuf.js")
+check("the demo phone never shows a pre-deadline countdown",
+      "left'" not in widget and "left\u2019" not in widget
+      and "56m" not in widget, True,
+      "the app renders a countdown only once the deadline has PASSED (BUG-074)")
+check("the demo phone never claims loved ones 'have been told'",
+      "have been told" not in widget, True,
+      "the app says HELP IS ON THE WAY only after the server confirms — "
+      "'told' unconditionally is the BUG-053 class")
+check("the demo help card says what the app's card says",
+      "HELP IS" in widget and "Tap to cancel if you're OK" in widget, True)
+check("the demo pushes carry the real titles",
+      "checked in ✓" in widget and "NEEDS HELP" in widget
+      and "has NOT checked in" in widget, True,
+      "a paraphrased notification is a screen the app does not have")
+
 check("the switch is named on the site as it is in the app",
       "share my\n        location" in pages.lower() or "share my location" in pages.lower(),
       True, "privacy names the switch; a wrong name strands the reader")
